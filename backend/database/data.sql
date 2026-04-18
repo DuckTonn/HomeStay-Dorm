@@ -670,4 +670,20 @@ SELECT setval(pg_get_serial_sequence('payment', 'payment_id'), COALESCE((SELECT 
 SELECT setval(pg_get_serial_sequence('record', 'record_id'), COALESCE((SELECT MAX(record_id) FROM record), 1), true);
 SELECT setval(pg_get_serial_sequence('refund_receipt', 'refund_receipt_id'), COALESCE((SELECT MAX(refund_receipt_id) FROM refund_receipt), 1), true);
 
+-- -----------------------------------------------------------------
+-- Tài khoản đăng nhập (Auth)
+-- Password gốc:  admin → admin123 | nhân viên → nv123 | khách → kh123 | luno → luno123
+-- -----------------------------------------------------------------
+INSERT INTO account (account_id, username, password_hash, role, employee_id, tenant_id) VALUES
+  (1, 'admin',        '$2b$10$McGojPlhA1gTiFRh79kil.OiFaW9vAV78fKRCnB/5.alogYHpq9cu', 'admin',    NULL, NULL),
+  (2, 'luno',         '$2b$10$BP.KmIh9s/pU0ZlOYg501eRSOKx5hnZCQoQZedDHvMi0oqZRcS5je', 'admin',    NULL, NULL),
+  (3, 'sale01',       '$2b$10$eg3uG5j2sdaIPRoyAQJzgOZq69l9IqQiCpTth94/ckdtRmVcgBSCq', 'employee', 1,    NULL),
+  (4, 'accountant01', '$2b$10$ehkI2FX.V4h0HepubMScXu7.8ByJo/jIhv/eR71HpyFj85ERcztNK', 'employee', 2,    NULL),
+  (5, 'manager01',    '$2b$10$PPYsvWcGsfwjIq4pp.PfJe8CrstAE4VSXainPzOJWJ9jXoYeHReNS',  'employee', 3,    NULL),
+  (6, 'manager02',    '$2b$10$1nQnz8OAPQDgwN01D2uXOe3sjjfDi8cXkBwtU2O0Re/OEWp1Ma/jm', 'employee', 6,    NULL),
+  (7, 'khach01',      '$2b$10$Tu.fUYz2XZPpBlFDtdWNle5hV0LLgES3GzFq0J/LyQHVq7aT6nGnG', 'customer', NULL, 1)
+ON CONFLICT (account_id) DO NOTHING;
+
+SELECT setval(pg_get_serial_sequence('account', 'account_id'), COALESCE((SELECT MAX(account_id) FROM account), 1), true);
+
 COMMIT;

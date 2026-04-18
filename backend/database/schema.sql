@@ -237,4 +237,16 @@ CREATE TABLE refund_receipt (
     status VARCHAR(50) DEFAULT 'Pending'
 );
 
+-- 21. Account (Auth)
+CREATE TABLE account (
+    account_id    SERIAL PRIMARY KEY,
+    username      VARCHAR(100) NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    role          VARCHAR(20) NOT NULL CHECK (role IN ('admin', 'employee', 'customer')),
+    employee_id   INT REFERENCES employee(employee_id),
+    tenant_id     INT REFERENCES tenant(tenant_id),
+    is_active     BOOLEAN DEFAULT TRUE,
+    created_at    TIMESTAMPTZ DEFAULT NOW()
+);
+
 COMMIT;
