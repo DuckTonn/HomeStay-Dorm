@@ -5,7 +5,10 @@ const {
     CreateRegulationDTO,
     UpdateRegulationDTO,
     CreateServiceDTO,
-    UpdateServiceDTO
+    UpdateServiceDTO,
+    BranchResponse,
+    RegulationResponse,
+    ServiceResponse
 } = require('./BranchDTO');
 
 // ─── Room DTOs ───────────────────────────────────────────────
@@ -15,13 +18,17 @@ const {
     CreateBedDTO,
     UpdateBedDTO,
     CreateRoomTypeDTO,
-    UpdateRoomTypeDTO
+    UpdateRoomTypeDTO,
+    RoomResponse,
+    BedResponse,
+    RoomTypeResponse
 } = require('./RoomDTO');
 
 // ─── Employee DTOs ───────────────────────────────────────────
 const {
     CreateEmployeeDTO,
-    UpdateEmployeeDTO
+    UpdateEmployeeDTO,
+    EmployeeResponse
 } = require('./EmployeeDTO');
 
 // ─── Registration DTOs ──────────────────────────────────────
@@ -30,7 +37,9 @@ const {
     RegistrationRequestDTO,
     CreateRegistrationDTO,
     CreateAppointmentDTO,
-    CreateCriteriaDTO
+    CreateCriteriaDTO,
+    RegistrationRequestResponse,
+    AppointmentResponse
 } = require('./RegistrationDTO');
 
 // ─── Deposit DTOs ───────────────────────────────────────────
@@ -38,7 +47,8 @@ const {
     CheckDepositAbilityDTO,
     CreateDepositReceiptDTO,
     CreateDepositPaymentDTO,
-    ConfirmDepositPaymentDTO
+    ConfirmDepositPaymentDTO,
+    DepositReceiptResponse
 } = require('./DepositDTO');
 
 // ─── Check-In DTOs ──────────────────────────────────────────
@@ -47,7 +57,8 @@ const {
     CreateContractDTO,
     SignContractDTO,
     CreateCheckInPaymentDTO,
-    HandoverRoomDTO
+    HandoverRoomDTO,
+    ContractResponse
 } = require('./CheckInDTO');
 
 // ─── Check-Out DTOs ─────────────────────────────────────────
@@ -61,7 +72,8 @@ const {
 // ─── Payment DTOs ───────────────────────────────────────────
 const {
     CreatePaymentDTO,
-    UpdatePaymentDTO
+    UpdatePaymentDTO,
+    PaymentResponse
 } = require('./PaymentDTO');
 
 module.exports = {
@@ -72,6 +84,9 @@ module.exports = {
     UpdateRegulationDTO,
     CreateServiceDTO,
     UpdateServiceDTO,
+    BranchResponse,
+    RegulationResponse,
+    ServiceResponse,
 
     // Room
     CreateRoomDTO,
@@ -80,10 +95,14 @@ module.exports = {
     UpdateBedDTO,
     CreateRoomTypeDTO,
     UpdateRoomTypeDTO,
+    RoomResponse,
+    BedResponse,
+    RoomTypeResponse,
 
     // Employee
     CreateEmployeeDTO,
     UpdateEmployeeDTO,
+    EmployeeResponse,
 
     // Registration
     TenantDTO,
@@ -91,12 +110,15 @@ module.exports = {
     CreateRegistrationDTO,
     CreateAppointmentDTO,
     CreateCriteriaDTO,
+    RegistrationRequestResponse,
+    AppointmentResponse,
 
     // Deposit
     CheckDepositAbilityDTO,
     CreateDepositReceiptDTO,
     CreateDepositPaymentDTO,
     ConfirmDepositPaymentDTO,
+    DepositReceiptResponse,
 
     // Check-In
     CheckStayConditionsDTO,
@@ -104,6 +126,7 @@ module.exports = {
     SignContractDTO,
     CreateCheckInPaymentDTO,
     HandoverRoomDTO,
+    ContractResponse,
 
     // Check-Out
     CalculateRefundDTO,
@@ -113,5 +136,6 @@ module.exports = {
 
     // Payment
     CreatePaymentDTO,
-    UpdatePaymentDTO
+    UpdatePaymentDTO,
+    PaymentResponse
 };

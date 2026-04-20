@@ -7,6 +7,8 @@ const recordRepository = require('../repositories/RecordRepository');
 const paymentRepository = require('../repositories/PaymentRepository');
 const refundCalculator = require('../strategies/RefundCalculator');
 const { createBusinessError } = require('../middlewares/validator');
+const Contract = require('../domain/Contract');
+const DepositReceipt = require('../domain/DepositReceipt');
 
 class CheckOutService {
     /**
@@ -123,7 +125,7 @@ class CheckOutService {
 
         // Terminate contract
         await contractRepository.update(contract_id, {
-            confirmation_status: 'Terminated'
+            confirmation_status: Contract.CONFIRMATION_STATUSES.TERMINATED
         });
 
         // Restore beds
@@ -142,7 +144,7 @@ class CheckOutService {
         // Update deposit receipt
         if (contract.deposit_receipt_id) {
             await depositReceiptRepository.update(contract.deposit_receipt_id, {
-                status: 'Refunded'
+                status: DepositReceipt.STATUSES.REFUNDED
             });
         }
 
@@ -193,7 +195,7 @@ class CheckOutService {
             }
         }
 
-        await depositReceiptRepository.update(deposit_receipt_id, { status: 'Refunded' });
+        await depositReceiptRepository.update(deposit_receipt_id, { status: DepositReceipt.STATUSES.REFUNDED });
 
         return { refundCalculation, refundReceipt };
     }

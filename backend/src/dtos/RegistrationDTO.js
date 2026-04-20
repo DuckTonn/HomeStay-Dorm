@@ -101,10 +101,48 @@ class CreateCriteriaDTO extends BaseDTO {
     }
 }
 
+// ─── Response Serializers ────────────────────────────────────
+class RegistrationRequestResponse {
+    static serialize(request) {
+        if (!request) return null;
+        return {
+            registration_request_id: request.registration_request_id,
+            status: request.status,
+            gender_policy: request.gender_policy,
+            area: request.area ?? null,
+            room_type_id: request.room_type_id ?? null,
+            price_level: request.price_level ?? null,
+            expected_date: request.expected_date,
+            duration: request.duration ?? null,
+            rental_type: request.rental_type,
+            number_of_people: request.number_of_people ?? 1,
+            tenant_id: request.tenant_id,
+            sales_employee_id: request.sales_employee_id
+        };
+    }
+}
+
+class AppointmentResponse {
+    static serialize(appointment) {
+        if (!appointment) return null;
+        return {
+            appointment_id: appointment.appointment_id,
+            appointment_time: appointment.appointment_time,
+            appointment_type: appointment.appointment_type,
+            status: appointment.status,
+            confirmation_status: appointment.confirmation_status,
+            registration_request_id: appointment.registration_request_id,
+            sales_employee_id: appointment.sales_employee_id
+        };
+    }
+}
+
 module.exports = {
     TenantDTO,
     RegistrationRequestDTO,
     CreateRegistrationDTO,
     CreateAppointmentDTO,
-    CreateCriteriaDTO
+    CreateCriteriaDTO,
+    RegistrationRequestResponse,
+    AppointmentResponse
 };

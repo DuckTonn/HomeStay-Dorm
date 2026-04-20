@@ -145,6 +145,24 @@ class BaseDTO {
         }
         return result;
     }
+
+    /**
+     * Wrap a paginated result (from repository) with a serializer function.
+     * Handles both paginated { data, pagination } and plain array responses.
+     * @param {Object|Array} result - Raw result from service/repository
+     * @param {Function} serializerFn - Function to serialize each item
+     * @returns {Object} { data: [...], pagination?: {...} }
+     */
+    static serializeList(result, serializerFn) {
+        if (result && result.pagination) {
+            return {
+                data: (result.data || []).map(serializerFn),
+                pagination: result.pagination
+            };
+        }
+        const items = Array.isArray(result) ? result : [];
+        return { data: items.map(serializerFn) };
+    }
 }
 
 module.exports = BaseDTO;

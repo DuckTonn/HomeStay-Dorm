@@ -4,6 +4,8 @@ const roomRepository = require('../repositories/RoomRepository');
 const paymentRepository = require('../repositories/PaymentRepository');
 const registrationRequestRepository = require('../repositories/RegistrationRequestRepository');
 const { createBusinessError } = require('../middlewares/validator');
+const Bed = require('../domain/Bed');
+const DepositReceipt = require('../domain/DepositReceipt');
 
 
 class DepositService {
@@ -15,7 +17,7 @@ class DepositService {
                 results.push({ bed_id: bedId, available: false, reason: 'Bed not found' });
                 continue;
             }
-            if (bed.status !== 'Empty') {
+            if (!Bed.isAvailableForDeposit(bed)) {
                 results.push({ bed_id: bedId, available: false, reason: `Bed is ${bed.status}` });
                 continue;
             }
@@ -38,8 +40,7 @@ class DepositService {
 
         // Deposit = 2 months of bed rent x number of beds
         const bedInfo = check.map(r => r.bed);
-        const totalMonthlyBedPrice = bedInfo.reduce((sum, b) => sum + Number(b.price || 0), 0);
-        const totalDeposit = totalMonthlyBedPrice * 2;
+        const totalDeposit = DepositReceipt.calculateTotalDeposit(bedInfo);
 
         // 24h payment deadline
         const paymentDeadline = new Date();
@@ -84,12 +85,12 @@ class DepositService {
         const depositReceipt = await depositReceiptRepository.findById(receiptId);
         if (!depositReceipt) throw createBusinessError('Deposit receipt not found');
 
-        if (depositReceipt.status !== 'Pending Payment') {
+        if (!DepositReceipt.isPending(depositReceipt)) {
             throw createBusinessError('Deposit receipt has already been processed');
         }
 
         // Check payment deadline
-        if (depositReceipt.payment_deadline && new Date() > new Date(depositReceipt.payment_deadline)) {
+        if (DepositReceipt.isExpired(depositReceipt)) {
             // Cancel receipt and restore beds
             await this.cancelDepositReceipt(receiptId);
             throw createBusinessError('Payment deadline exceeded; deposit receipt has been cancelled');

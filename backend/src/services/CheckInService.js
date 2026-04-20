@@ -6,6 +6,9 @@ const recordRepository = require('../repositories/RecordRepository');
 const paymentRepository = require('../repositories/PaymentRepository');
 const tenantRepository = require('../repositories/TenantRepository');
 const { createBusinessError } = require('../middlewares/validator');
+const DepositReceipt = require('../domain/DepositReceipt');
+const Contract = require('../domain/Contract');
+const Room = require('../domain/Room');
 
 
 class CheckInService {
@@ -14,7 +17,7 @@ class CheckInService {
         const depositReceipt = await depositReceiptRepository.findById(depositReceiptId);
         if (!depositReceipt) throw createBusinessError('Deposit receipt not found');
 
-        if (depositReceipt.status !== 'Paid') {
+        if (!DepositReceipt.isPaid(depositReceipt)) {
             throw createBusinessError('Deposit receipt is not paid or has been cancelled');
         }
 
@@ -47,7 +50,7 @@ class CheckInService {
                     const roomId = depositBeds[0].bed.room_id;
                     const room = await roomRepository.findById(roomId);
                     const memberGender = member.gender;
-                    if (room && room.gender_policy !== 'Mixed' && memberGender && memberGender !== room.gender_policy) {
+                    if (room && !Room.isGenderCompatible(room.gender_policy, memberGender)) {
                         conditions.passed = false;
                         conditions.reasons.push(`Gender does not match room policy (required: ${room.gender_policy})`);
                     }
@@ -91,7 +94,7 @@ class CheckInService {
 
         // Validate deposit receipt
         const depositReceipt = await depositReceiptRepository.findById(deposit_receipt_id);
-        if (!depositReceipt || depositReceipt.status !== 'Paid') {
+        if (!depositReceipt || !DepositReceipt.isPaid(depositReceipt)) {
             throw createBusinessError('Invalid deposit receipt or not paid');
         }
 
@@ -165,7 +168,7 @@ class CheckInService {
         const contract = await contractRepository.findById(contract_id);
         if (!contract) throw createBusinessError('Contract not found');
 
-        if (contract.confirmation_status !== 'Confirmed') {
+        if (!Contract.isConfirmed(contract)) {
             throw createBusinessError('Contract is not confirmed');
         }
 

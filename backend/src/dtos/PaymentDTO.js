@@ -28,7 +28,25 @@ class UpdatePaymentDTO extends BaseDTO {
     }
 }
 
+// ─── Response Serializer ─────────────────────────────────────
+class PaymentResponse {
+    static serialize(payment) {
+        if (!payment) return null;
+        return {
+            payment_id: payment.payment_id,
+            amount: Number(payment.amount || 0),
+            method: payment.method,
+            status: payment.status,
+            note: payment.note ?? null,
+            tenant_id: payment.tenant_id,
+            contract_id: payment.contract_id ?? null,
+            deposit_receipt_id: payment.deposit_receipt_id ?? null
+        };
+    }
+}
+
 module.exports = {
     CreatePaymentDTO,
-    UpdatePaymentDTO
+    UpdatePaymentDTO,
+    PaymentResponse
 };

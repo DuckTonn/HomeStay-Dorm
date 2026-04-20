@@ -76,11 +76,54 @@ class UpdateRoomTypeDTO extends BaseDTO {
     }
 }
 
+// ─── Response Serializers ────────────────────────────────────
+class RoomTypeResponse {
+    static serialize(roomType) {
+        if (!roomType) return null;
+        return {
+            room_type_id: roomType.room_type_id,
+            name: roomType.name
+        };
+    }
+}
+
+class BedResponse {
+    static serialize(bed) {
+        if (!bed) return null;
+        return {
+            bed_id: bed.bed_id,
+            status: bed.status,
+            price: Number(bed.price || 0)
+        };
+    }
+}
+
+class RoomResponse {
+    static serialize(room) {
+        if (!room) return null;
+        return {
+            room_id: room.room_id,
+            status: room.status,
+            gender_policy: room.gender_policy,
+            area: room.area ?? null,
+            total_beds: room.total_beds,
+            available_beds: room.available_beds,
+            room_type: room.room_type ? RoomTypeResponse.serialize(room.room_type) : null,
+            branch_id: room.branch_id ?? null,
+            branch: room.branch ? { branch_id: room.branch.branch_id, address: room.branch.address } : null,
+            beds: Array.isArray(room.bed) ? room.bed.map(BedResponse.serialize) : []
+        };
+    }
+}
+
 module.exports = {
     CreateRoomDTO,
     UpdateRoomDTO,
     CreateBedDTO,
     UpdateBedDTO,
     CreateRoomTypeDTO,
-    UpdateRoomTypeDTO
+    UpdateRoomTypeDTO,
+    RoomResponse,
+    BedResponse,
+    RoomTypeResponse
 };

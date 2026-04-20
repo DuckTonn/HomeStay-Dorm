@@ -31,7 +31,22 @@ class UpdateEmployeeDTO extends BaseDTO {
     }
 }
 
+// ─── Response Serializer ─────────────────────────────────────
+class EmployeeResponse {
+    static serialize(employee) {
+        if (!employee) return null;
+        return {
+            employee_id: employee.employee_id,
+            name: employee.name,
+            role: employee.role,
+            salary: Number(employee.salary || 0),
+            branch_id: employee.branch_id ?? null
+        };
+    }
+}
+
 module.exports = {
     CreateEmployeeDTO,
-    UpdateEmployeeDTO
+    UpdateEmployeeDTO,
+    EmployeeResponse
 };

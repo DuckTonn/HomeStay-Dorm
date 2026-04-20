@@ -90,10 +90,34 @@ class HandoverRoomDTO extends BaseDTO {
     }
 }
 
+// ─── Response Serializers ────────────────────────────────────
+class ContractResponse {
+    static serialize(contract) {
+        if (!contract) return null;
+        return {
+            contract_id: contract.contract_id,
+            confirmation_status: contract.confirmation_status,
+            rental_type: contract.rental_type,
+            start_date: contract.start_date,
+            end_date: contract.end_date,
+            bed_count: contract.bed_count,
+            bed_price: Number(contract.bed_price || 0),
+            tenant_id: contract.tenant_id,
+            room_id: contract.room_id,
+            employee_id: contract.employee_id,
+            deposit_receipt_id: contract.deposit_receipt_id ?? null,
+            document_proof: contract.document_proof ?? null,
+            beds: Array.isArray(contract.bed) ? contract.bed : undefined,
+            services: Array.isArray(contract.service) ? contract.service : undefined
+        };
+    }
+}
+
 module.exports = {
     CheckStayConditionsDTO,
     CreateContractDTO,
     SignContractDTO,
     CreateCheckInPaymentDTO,
-    HandoverRoomDTO
+    HandoverRoomDTO,
+    ContractResponse
 };

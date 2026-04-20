@@ -69,11 +69,48 @@ class UpdateServiceDTO extends BaseDTO {
     }
 }
 
+// ─── Response Serializers ────────────────────────────────────
+class BranchResponse {
+    static serialize(branch) {
+        if (!branch) return null;
+        return {
+            branch_id: branch.branch_id,
+            address: branch.address
+        };
+    }
+}
+
+class RegulationResponse {
+    static serialize(regulation) {
+        if (!regulation) return null;
+        return {
+            regulation_id: regulation.regulation_id,
+            description: regulation.description,
+            category: regulation.category ?? null,
+            branch_id: regulation.branch_id ?? null
+        };
+    }
+}
+
+class ServiceResponse {
+    static serialize(service) {
+        if (!service) return null;
+        return {
+            service_id: service.service_id,
+            name: service.name,
+            price: Number(service.price || 0)
+        };
+    }
+}
+
 module.exports = {
     CreateBranchDTO,
     UpdateBranchDTO,
     CreateRegulationDTO,
     UpdateRegulationDTO,
     CreateServiceDTO,
-    UpdateServiceDTO
+    UpdateServiceDTO,
+    BranchResponse,
+    RegulationResponse,
+    ServiceResponse
 };

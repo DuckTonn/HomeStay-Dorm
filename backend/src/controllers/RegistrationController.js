@@ -1,4 +1,6 @@
 const registrationService = require('../services/RegistrationService');
+const { RegistrationRequestResponse, AppointmentResponse } = require('../dtos/RegistrationDTO');
+const BaseDTO = require('../dtos/BaseDTO');
 
 /**
  * Controller: Registration flow
@@ -8,7 +10,7 @@ class RegistrationController {
     async createRegistration(req, res, next) {
         try {
             const result = await registrationService.createRegistration(req.body);
-            res.status(201).json({ success: true, ...(result?.pagination ? { data: result.data, pagination: result.pagination } : { data: result }) });
+            res.status(201).json({ success: true, data: result });
         } catch (error) { next(error); }
     }
 
@@ -16,7 +18,7 @@ class RegistrationController {
     async checkAvailableRooms(req, res, next) {
         try {
             const result = await registrationService.checkAvailableRooms(req.params.requestId);
-            res.json({ success: true, ...(result?.pagination ? { data: result.data, pagination: result.pagination } : { data: result }) });
+            res.json({ success: true, data: result });
         } catch (error) { next(error); }
     }
 
@@ -24,7 +26,7 @@ class RegistrationController {
     async createAppointment(req, res, next) {
         try {
             const result = await registrationService.createAppointment(req.body);
-            res.status(201).json({ success: true, ...(result?.pagination ? { data: result.data, pagination: result.pagination } : { data: result }) });
+            res.status(201).json({ success: true, data: AppointmentResponse.serialize(result) });
         } catch (error) { next(error); }
     }
 
@@ -32,15 +34,16 @@ class RegistrationController {
     async confirmAppointment(req, res, next) {
         try {
             const result = await registrationService.confirmAppointment(req.params.id);
-            res.json({ success: true, ...(result?.pagination ? { data: result.data, pagination: result.pagination } : { data: result }) });
+            res.json({ success: true, data: AppointmentResponse.serialize(result) });
         } catch (error) { next(error); }
     }
 
     // List upcoming appointments
     async getUpcomingAppointments(req, res, next) {
         try {
-            const data = await registrationService.getUpcomingAppointments(req.query);
-            res.json({ success: true, ...(data?.pagination ? { data: data.data, pagination: data.pagination } : { data }) });
+            const result = await registrationService.getUpcomingAppointments(req.query);
+            const serialized = BaseDTO.serializeList(result, AppointmentResponse.serialize);
+            res.json({ success: true, ...serialized });
         } catch (error) { next(error); }
     }
 
@@ -48,23 +51,25 @@ class RegistrationController {
     async getRequestById(req, res, next) {
         try {
             const data = await registrationService.getRequestById(req.params.requestId);
-            res.json({ success: true, ...(data?.pagination ? { data: data.data, pagination: data.pagination } : { data }) });
+            res.json({ success: true, data: RegistrationRequestResponse.serialize(data) });
         } catch (error) { next(error); }
     }
 
     // List requests
     async getAllRequests(req, res, next) {
         try {
-            const data = await registrationService.getAllRequests(req.query);
-            res.json({ success: true, ...(data?.pagination ? { data: data.data, pagination: data.pagination } : { data }) });
+            const result = await registrationService.getAllRequests(req.query);
+            const serialized = BaseDTO.serializeList(result, RegistrationRequestResponse.serialize);
+            res.json({ success: true, ...serialized });
         } catch (error) { next(error); }
     }
 
     // List criteria
     async getAllCriteria(req, res, next) {
         try {
-            const data = await registrationService.getAllCriteria(req.query);
-            res.json({ success: true, ...(data?.pagination ? { data: data.data, pagination: data.pagination } : { data }) });
+            const result = await registrationService.getAllCriteria(req.query);
+            const serialized = BaseDTO.serializeList(result, item => item);
+            res.json({ success: true, ...serialized });
         } catch (error) { next(error); }
     }
 
@@ -72,7 +77,7 @@ class RegistrationController {
     async createCriteria(req, res, next) {
         try {
             const data = await registrationService.createCriteria(req.body);
-            res.status(201).json({ success: true, ...(data?.pagination ? { data: data.data, pagination: data.pagination } : { data }) });
+            res.status(201).json({ success: true, data });
         } catch (error) { next(error); }
     }
 }

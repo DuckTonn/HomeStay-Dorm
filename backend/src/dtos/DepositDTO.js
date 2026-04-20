@@ -54,9 +54,30 @@ class ConfirmDepositPaymentDTO extends BaseDTO {
     }
 }
 
+// ─── Response Serializers ────────────────────────────────────
+class DepositReceiptResponse {
+    static serialize(receipt) {
+        if (!receipt) return null;
+        return {
+            deposit_receipt_id: receipt.deposit_receipt_id,
+            status: receipt.status,
+            total_deposit: Number(receipt.total_deposit || 0),
+            payment_deadline: receipt.payment_deadline ?? null,
+            note: receipt.note ?? null,
+            tenant_id: receipt.tenant_id,
+            sales_employee_id: receipt.sales_employee_id,
+            manager_id: receipt.manager_id,
+            beds: Array.isArray(receipt.beds)
+                ? receipt.beds.map(b => ({ bed_id: b.bed_id, status: b.status, price: Number(b.price || 0) }))
+                : undefined
+        };
+    }
+}
+
 module.exports = {
     CheckDepositAbilityDTO,
     CreateDepositReceiptDTO,
     CreateDepositPaymentDTO,
-    ConfirmDepositPaymentDTO
+    ConfirmDepositPaymentDTO,
+    DepositReceiptResponse
 };
