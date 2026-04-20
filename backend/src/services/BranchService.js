@@ -3,8 +3,8 @@ const regulationRepository = require('../repositories/RegulationRepository');
 const serviceRepository = require('../repositories/ServiceRepository');
 
 class BranchService {
-    async getAllBranches() {
-        return branchRepository.findAll();
+    async getAllBranches(filters = {}) {
+        return branchRepository.findAll(filters);
     }
 
     async getBranchById(branchId) {
@@ -28,8 +28,8 @@ class BranchService {
         return regulationRepository.findByBranch(branchId);
     }
 
-    async getAllRegulations() {
-        return regulationRepository.findAll();
+    async getAllRegulations(filters = {}) {
+        return regulationRepository.findAll(filters);
     }
 
     async createRegulation(data) {
@@ -45,8 +45,8 @@ class BranchService {
     }
 
     // --- Services ---
-    async getAllServices() {
-        return serviceRepository.findAll();
+    async getAllServices(filters = {}) {
+        return serviceRepository.findAll(filters);
     }
 
     async createService(data) {

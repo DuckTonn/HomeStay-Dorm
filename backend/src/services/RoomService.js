@@ -78,8 +78,8 @@ class RoomService {
     }
 
     // --- Room types ---
-    async getAllRoomTypes() {
-        return roomTypeRepository.findAll();
+    async getAllRoomTypes(filters = {}) {
+        return roomTypeRepository.findAll(filters);
     }
 
     async createRoomType(data) {

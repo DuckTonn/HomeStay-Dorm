@@ -65,12 +65,14 @@ class RegistrationService {
         const request = await registrationRequestRepository.findById(requestId);
         if (!request) throw createBusinessError('Registration request not found');
 
-        const availableRooms = await roomRepository.findAvailable({
+        const availableRoomsResult = await roomRepository.findAvailable({
             area: request.area,
             gender_policy: request.gender_policy,
             room_type_id: request.room_type_id,
             price_level: request.price_level
         });
+
+        const availableRooms = availableRoomsResult.data ?? availableRoomsResult;
 
         return {
             request,
@@ -104,12 +106,12 @@ class RegistrationService {
         });
     }
 
-    async getUpcomingAppointments() {
-        return viewingAppointmentRepository.findUpcoming();
+    async getUpcomingAppointments(filters = {}) {
+        return viewingAppointmentRepository.findUpcoming(filters);
     }
 
-    async getAllCriteria() {
-        return rentalCriteriaRepository.findAll();
+    async getAllCriteria(filters = {}) {
+        return rentalCriteriaRepository.findAll(filters);
     }
 
 

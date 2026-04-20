@@ -8,7 +8,7 @@ class CheckInController {
     async checkDeposit(req, res, next) {
         try {
             const result = await checkInService.checkDeposit(req.params.depositReceiptId);
-            res.json({ success: true, data: result });
+            res.json({ success: true, ...(result?.pagination ? { data: result.data, pagination: result.pagination } : { data: result }) });
         } catch (error) { next(error); }
     }
 
@@ -16,7 +16,7 @@ class CheckInController {
     async checkStayConditions(req, res, next) {
         try {
             const result = await checkInService.checkStayConditions(req.body);
-            res.json({ success: true, data: result });
+            res.json({ success: true, ...(result?.pagination ? { data: result.data, pagination: result.pagination } : { data: result }) });
         } catch (error) { next(error); }
     }
 
@@ -24,7 +24,7 @@ class CheckInController {
     async createContract(req, res, next) {
         try {
             const result = await checkInService.createContract(req.body);
-            res.status(201).json({ success: true, data: result });
+            res.status(201).json({ success: true, ...(result?.pagination ? { data: result.data, pagination: result.pagination } : { data: result }) });
         } catch (error) { next(error); }
     }
 
@@ -35,7 +35,7 @@ class CheckInController {
                 req.params.contractId,
                 req.body.document_proof
             );
-            res.json({ success: true, data: result });
+            res.json({ success: true, ...(result?.pagination ? { data: result.data, pagination: result.pagination } : { data: result }) });
         } catch (error) { next(error); }
     }
 
@@ -43,7 +43,7 @@ class CheckInController {
     async createCheckInPayment(req, res, next) {
         try {
             const result = await checkInService.createCheckInPayment(req.body);
-            res.status(201).json({ success: true, data: result });
+            res.status(201).json({ success: true, ...(result?.pagination ? { data: result.data, pagination: result.pagination } : { data: result }) });
         } catch (error) { next(error); }
     }
 
@@ -51,7 +51,7 @@ class CheckInController {
     async handoverRoom(req, res, next) {
         try {
             const result = await checkInService.handoverRoom(req.body);
-            res.json({ success: true, data: result });
+            res.json({ success: true, ...(result?.pagination ? { data: result.data, pagination: result.pagination } : { data: result }) });
         } catch (error) { next(error); }
     }
 
@@ -59,7 +59,7 @@ class CheckInController {
     async getContractById(req, res, next) {
         try {
             const data = await checkInService.getContractById(req.params.id);
-            res.json({ success: true, data });
+            res.json({ success: true, ...(data?.pagination ? { data: data.data, pagination: data.pagination } : { data }) });
         } catch (error) { next(error); }
     }
 
@@ -67,7 +67,7 @@ class CheckInController {
     async getAllContracts(req, res, next) {
         try {
             const data = await checkInService.getAllContracts(req.query);
-            res.json({ success: true, data });
+            res.json({ success: true, ...(data?.pagination ? { data: data.data, pagination: data.pagination } : { data }) });
         } catch (error) { next(error); }
     }
 }

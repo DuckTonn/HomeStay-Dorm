@@ -21,8 +21,8 @@ class EmployeeRepository extends BaseRepository {
         return this.findAll({ branch_id: branchId });
     }
 
-    async findByRole(role) {
-        return this.findAll({ role });
+    async findByRole(role, filters = {}) {
+        return this.findAll({ role, ...filters });
     }
 }
 

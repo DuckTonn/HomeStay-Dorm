@@ -8,7 +8,7 @@ class CheckOutController {
     async registerCheckOut(req, res, next) {
         try {
             const result = await checkOutService.registerCheckOut(req.params.contractId);
-            res.json({ success: true, data: result });
+            res.json({ success: true, ...(result?.pagination ? { data: result.data, pagination: result.pagination } : { data: result }) });
         } catch (error) { next(error); }
     }
 
@@ -16,7 +16,7 @@ class CheckOutController {
     async calculateRefund(req, res, next) {
         try {
             const result = await checkOutService.calculateRefund(req.body);
-            res.json({ success: true, data: result });
+            res.json({ success: true, ...(result?.pagination ? { data: result.data, pagination: result.pagination } : { data: result }) });
         } catch (error) { next(error); }
     }
 
@@ -24,7 +24,7 @@ class CheckOutController {
     async confirmCheckOut(req, res, next) {
         try {
             const result = await checkOutService.confirmCheckOut(req.body);
-            res.json({ success: true, data: result });
+            res.json({ success: true, ...(result?.pagination ? { data: result.data, pagination: result.pagination } : { data: result }) });
         } catch (error) { next(error); }
     }
 
@@ -32,7 +32,7 @@ class CheckOutController {
     async completeCheckOut(req, res, next) {
         try {
             const result = await checkOutService.completeCheckOut(req.body);
-            res.json({ success: true, data: result });
+            res.json({ success: true, ...(result?.pagination ? { data: result.data, pagination: result.pagination } : { data: result }) });
         } catch (error) { next(error); }
     }
 
@@ -40,7 +40,7 @@ class CheckOutController {
     async checkOutWithoutContract(req, res, next) {
         try {
             const result = await checkOutService.checkOutWithoutContract(req.body);
-            res.json({ success: true, data: result });
+            res.json({ success: true, ...(result?.pagination ? { data: result.data, pagination: result.pagination } : { data: result }) });
         } catch (error) { next(error); }
     }
 }

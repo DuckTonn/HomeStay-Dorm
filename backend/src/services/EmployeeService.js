@@ -29,8 +29,8 @@ class EmployeeService {
         return employeeRepository.findByBranch(branchId);
     }
 
-    async getSaleEmployees() {
-        return employeeRepository.findByRole('sale');
+    async getSaleEmployees(filters = {}) {
+        return employeeRepository.findByRole('sale', filters);
     }
 }
 

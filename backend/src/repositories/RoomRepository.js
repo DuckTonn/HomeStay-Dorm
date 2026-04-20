@@ -28,8 +28,13 @@ class RoomRepository extends BaseRepository {
             max_price,
             // Back-compat with existing code
             price_level,
-            only_available = true
+            only_available = true,
+            page,
+            limit
         } = filters;
+
+        const pageNum = page ? Math.max(1, parseInt(page, 10)) : 1;
+        const limitNum = limit ? Math.max(1, parseInt(limit, 10)) : 10;
 
         const effectiveMaxPrice = max_price ?? price_level;
         const hasBedPriceFilter =
@@ -40,7 +45,7 @@ class RoomRepository extends BaseRepository {
 
         let query = this.db
             .from(this.tableName)
-            .select(`*, room_type(*), branch(*), ${bedSelect}`);
+            .select(`*, room_type(*), branch(*), ${bedSelect}`, { count: 'exact' });
 
         if (area) query = query.eq('area', area);
         if (gender_policy) query = query.eq('gender_policy', gender_policy);
@@ -63,9 +68,22 @@ class RoomRepository extends BaseRepository {
             }
         }
 
-        const { data, error } = await query;
+        const from = (pageNum - 1) * limitNum;
+        const to = from + limitNum - 1;
+        query = query.range(from, to);
+
+        const { data, count, error } = await query;
         if (error) throw error;
-        return data;
+        
+        return {
+            data,
+            pagination: {
+                page: pageNum,
+                limit: limitNum,
+                totalItems: count || 0,
+                totalPages: Math.ceil((count || 0) / limitNum)
+            }
+        };
     }
 
     async updateAvailableBedCount(roomId) {
