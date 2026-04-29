@@ -11,7 +11,7 @@ export default function MainLayout() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="flex-1 bg-background px-[6%] py-4 flex flex-col gap-[10px] w-full">
+      <main className="flex-1 bg-background px-[6%] pt-20 flex flex-col gap-[10px] w-full">
         <Outlet />
       </main>
 
