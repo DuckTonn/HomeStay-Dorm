@@ -78,6 +78,69 @@ class AuthController {
             next(err);
         }
     }
+
+    /**
+     * POST /api/auth/register-customer
+     * Body: { username, password }
+     */
+    async registerCustomer(req, res, next) {
+        try {
+            const { username, password } = req.body;
+
+            if (!username || !password) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'username và password là bắt buộc'
+                });
+            }
+
+            const newAccount = await authService.registerCustomer({ username, password });
+
+            return res.status(201).json({
+                success: true,
+                message: 'Đăng ký tài khoản thành công',
+                data: newAccount
+            });
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    /**
+     * POST /api/auth/forgot-password
+     * Body: { username }
+     */
+    async forgotPassword(req, res, next) {
+        try {
+            const { username } = req.body;
+            const result = await authService.forgotPassword(username);
+
+            return res.status(200).json({
+                success: true,
+                ...result
+            });
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    /**
+     * POST /api/auth/reset-password
+     * Body: { username, otp, newPassword }
+     */
+    async resetPassword(req, res, next) {
+        try {
+            const { username, otp, newPassword } = req.body;
+            const result = await authService.resetPassword(username, otp, newPassword);
+
+            return res.status(200).json({
+                success: true,
+                ...result
+            });
+        } catch (err) {
+            next(err);
+        }
+    }
 }
 
 module.exports = new AuthController();

@@ -1,14 +1,36 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthLayout } from "@/layouts/AuthLayout";
 import heroImage from "@/assets/images/hero.png";
 import FacebookButton from "@/components/auth/FacebookButton";
 import GoogleButton from "@/components/auth/GoogleButton";
+import { useForm } from "react-hook-form";
+import { useState } from "react";
+import api from "@/lib/axios";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const LoginPage = () => {
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const [errorMsg, setErrorMsg] = useState("");
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const onSubmit = async (data: any) => {
+    setErrorMsg("");
+    try {
+      const response = await api.post("/auth/login", data);
+      if (response.data.success) {
+        login(response.data.data.token, response.data.data.user);
+        navigate("/");
+      }
+    } catch (err: any) {
+      setErrorMsg(err.response?.data?.message || "Đăng nhập thất bại");
+    }
+  };
+
   return (
     <AuthLayout heroImage={heroImage}>
       {/* 1. Heading & Accent Link */}
-      <div className="text-center mb-20 be-vietnam-pro-light">
+      <div className="text-center mb-16 be-vietnam-pro-light">
         <h1 className="text-7xl text-text mb-2 whitespace-nowrap be-vietnam-pro-bold">
           Đăng nhập
         </h1>
@@ -21,18 +43,28 @@ export const LoginPage = () => {
       </div>
 
       {/* 2. Credentials Form */}
-      <form className="flex flex-col gap-6">
-        <input 
-          type="text" 
-          placeholder="Email / Username"
-          className="w-full h-14 rounded-lg border border-LightOutline px-6 text-lg placeholder:text-gray-400 outline-none focus:border-secondary focus:ring-1 focus:ring-secondary"
-        />
+      <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
+        {errorMsg && <div className="text-red-500 text-center">{errorMsg}</div>}
         
-        <input 
-          type="password" 
-          placeholder="Mật khẩu"
-          className="w-full h-14 rounded-lg border border-LightOutline px-6 text-lg placeholder:text-gray-400 outline-none focus:border-secondary focus:ring-1 focus:ring-secondary"
-        />
+        <div>
+          <input 
+            type="text" 
+            placeholder="Email / Username"
+            {...register("username", { required: true })}
+            className="w-full h-14 rounded-lg border border-LightOutline px-6 text-lg placeholder:text-gray-400 outline-none focus:border-secondary focus:ring-1 focus:ring-secondary"
+          />
+          {errors.username && <span className="text-red-500 text-sm">Vui lòng nhập tên đăng nhập</span>}
+        </div>
+        
+        <div>
+          <input 
+            type="password" 
+            placeholder="Mật khẩu"
+            {...register("password", { required: true })}
+            className="w-full h-14 rounded-lg border border-LightOutline px-6 text-lg placeholder:text-gray-400 outline-none focus:border-secondary focus:ring-1 focus:ring-secondary"
+          />
+          {errors.password && <span className="text-red-500 text-sm">Vui lòng nhập mật khẩu</span>}
+        </div>
 
         {/* Forget Password Link */}
         <div className="text-left -mt-2">
@@ -64,7 +96,6 @@ export const LoginPage = () => {
         <GoogleButton />
         <FacebookButton />
       </div>
-
     </AuthLayout>
   );
 };

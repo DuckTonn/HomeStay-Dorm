@@ -1,10 +1,36 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthLayout } from "@/layouts/AuthLayout";
 import heroImage from "@/assets/images/hero.png"; // Path to the large room image
 import FacebookButton from "@/components/auth/FacebookButton";
 import GoogleButton from "@/components/auth/GoogleButton";
+import { useForm } from "react-hook-form";
+import { useState } from "react";
+import api from "@/lib/axios";
+import { toast } from "react-toastify";
 
 export const RegisterPage = () => {
+  const { register, handleSubmit, formState: { errors }, watch } = useForm();
+  const [errorMsg, setErrorMsg] = useState("");
+  const navigate = useNavigate();
+
+  const password = watch("password");
+
+  const onSubmit = async (data: any) => {
+    setErrorMsg("");
+    try {
+      const response = await api.post("/auth/register-customer", {
+        username: data.username,
+        password: data.password
+      });
+      if (response.data.success) {
+        toast.success("Đăng ký thành công! Vui lòng đăng nhập.");
+        navigate("/login");
+      }
+    } catch (err: any) {
+      setErrorMsg(err.response?.data?.message || "Đăng ký thất bại");
+    }
+  };
+
   return (
     <AuthLayout heroImage={heroImage}>
       {/* 1. Heading & Accent Link */}
@@ -21,24 +47,41 @@ export const RegisterPage = () => {
       </div>
 
       {/* 2. Credentials Form */}
-      <form className="flex flex-col gap-6">
-        <input 
-          type="email" 
-          placeholder="Email"
-          className="w-full h-14 rounded-lg border border-LightOutline px-6 text-lg placeholder:text-gray-400 outline-none focus:border-secondary focus:ring-1 focus:ring-secondary"
-        />
+      <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
+        {errorMsg && <div className="text-red-500 text-center">{errorMsg}</div>}
         
-        <input 
-          type="password" 
-          placeholder="Mật khẩu"
-          className="w-full h-14 rounded-lg border border-LightOutline px-6 text-lg placeholder:text-gray-400 outline-none focus:border-secondary focus:ring-1 focus:ring-secondary"
-        />
+        <div>
+          <input 
+            type="text" 
+            placeholder="Email / Username"
+            {...register("username", { required: "Vui lòng nhập tên đăng nhập" })}
+            className="w-full h-14 rounded-lg border border-LightOutline px-6 text-lg placeholder:text-gray-400 outline-none focus:border-secondary focus:ring-1 focus:ring-secondary"
+          />
+          {errors.username && <span className="text-red-500 text-sm">{errors.username.message as string}</span>}
+        </div>
+        
+        <div>
+          <input 
+            type="password" 
+            placeholder="Mật khẩu"
+            {...register("password", { required: "Vui lòng nhập mật khẩu", minLength: { value: 6, message: "Mật khẩu ít nhất 6 ký tự" } })}
+            className="w-full h-14 rounded-lg border border-LightOutline px-6 text-lg placeholder:text-gray-400 outline-none focus:border-secondary focus:ring-1 focus:ring-secondary"
+          />
+          {errors.password && <span className="text-red-500 text-sm">{errors.password.message as string}</span>}
+        </div>
 
-        <input 
-          type="password" 
-          placeholder="Nhập lại mật khẩu"
-          className="w-full h-14 rounded-lg border border-LightOutline px-6 text-lg placeholder:text-gray-400 outline-none focus:border-secondary focus:ring-1 focus:ring-secondary"
-        />
+        <div>
+          <input 
+            type="password" 
+            placeholder="Nhập lại mật khẩu"
+            {...register("confirmPassword", { 
+              required: "Vui lòng nhập lại mật khẩu",
+              validate: value => value === password || "Mật khẩu không khớp"
+            })}
+            className="w-full h-14 rounded-lg border border-LightOutline px-6 text-lg placeholder:text-gray-400 outline-none focus:border-secondary focus:ring-1 focus:ring-secondary"
+          />
+          {errors.confirmPassword && <span className="text-red-500 text-sm">{errors.confirmPassword.message as string}</span>}
+        </div>
 
         {/* Secondary Green Button */}
         <button 

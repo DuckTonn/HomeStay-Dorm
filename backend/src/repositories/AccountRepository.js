@@ -59,6 +59,20 @@ class AccountRepository extends BaseRepository {
         if (error) throw error;
         return data;
     }
+    async updatePassword(username, newPasswordHash) {
+        const { data, error } = await this.db
+            .from(this.tableName)
+            .update({ password_hash: newPasswordHash })
+            .eq('username', username)
+            .select()
+            .single();
+
+        if (error) {
+            if (error.code === 'PGRST116') return null;
+            throw error;
+        }
+        return data;
+    }
 }
 
 module.exports = new AccountRepository();

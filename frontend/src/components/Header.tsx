@@ -1,8 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import UserMenu from "@/components/UserMenu";
 
 const Header = () => {
   const [passThreshold, setPassThreshold] = useState(false);
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -45,15 +48,21 @@ const Header = () => {
 
           {/* Right Section */}
           <div className="flex flex-1 items-center justify-end gap-5">
-            <Link to="login" className="text-text transition-colors hover:text-primary">
-              Đăng nhập
-            </Link>
-            <div className="h-6 w-[1.5px] bg-secondary opacity-75"></div>
-            <Link to="/register">
-              <button className="rounded-md bg-secondary px-3 py-1 be-vietnam-pro-medium text-background transition-colors hover:ring hover:ring-offset-primary hover:ring-offset-2 hover:shadow-md hover:cursor-pointer">
-                Đăng ký
-              </button>
-            </Link>
+            {isAuthenticated ? (
+              <UserMenu />
+            ) : (
+              <>
+                <Link to="/login" className="text-text transition-colors hover:text-primary">
+                  Đăng nhập
+                </Link>
+                <div className="h-6 w-[1.5px] bg-secondary opacity-75"></div>
+                <Link to="/register">
+                  <button className="rounded-md bg-secondary px-3 py-1 be-vietnam-pro-medium text-background transition-colors hover:ring hover:ring-offset-primary hover:ring-offset-2 hover:shadow-md hover:cursor-pointer">
+                    Đăng ký
+                  </button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </header>
@@ -80,17 +89,23 @@ const Header = () => {
 
         {/* Right Section */}
         <div className="flex flex-1 items-center justify-end gap-2 h-fit w-fit">
-          <Link to="#" className="text-text transition-colors hover:text-primary whitespace-nowrap">
-            Đăng nhập
-          </Link>
+          {isAuthenticated ? (
+            <UserMenu />
+          ) : (
+            <>
+              <Link to="/login" className="text-text transition-colors hover:text-primary whitespace-nowrap">
+                Đăng nhập
+              </Link>
 
-          <div className="h-5 w-[1.5px] bg-secondary opacity-75"></div>
+              <div className="h-5 w-[1.5px] bg-secondary opacity-75"></div>
 
-          <Link to="/register">
-            <button className="rounded-md bg-secondary px-2 be-vietnam-pro-medium text-background transition-colors hover:ring hover:ring-offset-primary hover:ring-offset-2 hover:shadow-md hover:cursor-pointer whitespace-nowrap">
-              Đăng ký
-            </button>
-          </Link>
+              <Link to="/register">
+                <button className="rounded-md bg-secondary px-2 be-vietnam-pro-medium text-background transition-colors hover:ring hover:ring-offset-primary hover:ring-offset-2 hover:shadow-md hover:cursor-pointer whitespace-nowrap">
+                  Đăng ký
+                </button>
+              </Link>
+            </>
+          )}
         </div>
       </header>
     </>
