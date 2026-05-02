@@ -17,6 +17,17 @@ class RoomRepository extends BaseRepository {
         return super.delete(id, 'room_id');
     }
 
+    async getMaxRoomNumberForBranch(branchId) {
+        const { data, error } = await this.db
+            .from(this.tableName)
+            .select('room_number')
+            .eq('branch_id', branchId)
+            .order('room_number', { ascending: false })
+            .limit(1);
+        if (error) throw error;
+        return data && data.length > 0 ? data[0].room_number : 0;
+    }
+
     async findAvailable(filters = {}) {
         const {
             area,
@@ -26,9 +37,10 @@ class RoomRepository extends BaseRepository {
             people_count,
             min_price,
             max_price,
-            // Back-compat with existing code
             price_level,
             only_available = true,
+            is_full,
+            room_number,
             page,
             limit
         } = filters;
@@ -41,7 +53,10 @@ class RoomRepository extends BaseRepository {
             (min_price !== undefined && min_price !== null)
             || (effectiveMaxPrice !== undefined && effectiveMaxPrice !== null);
 
-        const bedSelect = hasBedPriceFilter ? 'bed!inner(*)' : 'bed(*)';
+        const bedSelect = hasBedPriceFilter
+            ? 'bed!inner(*, contract_bed(contract(tenant(phone))))'
+            : 'bed(*, contract_bed(contract(tenant(phone))))';
+
 
         let query = this.db
             .from(this.tableName)
@@ -52,8 +67,13 @@ class RoomRepository extends BaseRepository {
         if (room_type_id) query = query.eq('room_type_id', room_type_id);
         if (branch_id !== undefined && branch_id !== null) query = query.eq('branch_id', branch_id);
         if (people_count !== undefined && people_count !== null) query = query.gte('available_beds', people_count);
+        if (room_number) query = query.eq('room_number', room_number);
 
-        if (only_available) {
+        if (is_full === true) {
+            query = query.eq('available_beds', 0);
+        } else if (is_full === false) {
+            query = query.gt('available_beds', 0);
+        } else if (only_available) {
             query = query.gt('available_beds', 0);
         }
 
@@ -74,7 +94,7 @@ class RoomRepository extends BaseRepository {
 
         const { data, count, error } = await query;
         if (error) throw error;
-        
+
         return {
             data,
             pagination: {

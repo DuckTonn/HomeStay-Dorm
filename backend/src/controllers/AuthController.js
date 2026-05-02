@@ -38,6 +38,24 @@ class AuthController {
     }
 
     /**
+     * PUT /api/auth/me
+     * Header: Authorization: Bearer <token>
+     * Body: { name, email, phone, gender, nationality, cccd_number, address }
+     */
+    async updateMe(req, res, next) {
+        try {
+            const account = await authService.updateProfile(req.user.account_id, req.body);
+            return res.status(200).json({
+                success: true,
+                message: 'Cập nhật thông tin thành công',
+                data: account
+            });
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    /**
      * POST /api/auth/register
      * Chỉ admin được tạo tài khoản mới.
      * Body: { username, password, role, employee_id?, tenant_id? }
@@ -72,33 +90,6 @@ class AuthController {
             return res.status(201).json({
                 success: true,
                 message: 'Tạo tài khoản thành công',
-                data: newAccount
-            });
-        } catch (err) {
-            next(err);
-        }
-    }
-
-    /**
-     * POST /api/auth/register-customer
-     * Body: { username, password }
-     */
-    async registerCustomer(req, res, next) {
-        try {
-            const { username, password } = req.body;
-
-            if (!username || !password) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'username và password là bắt buộc'
-                });
-            }
-
-            const newAccount = await authService.registerCustomer({ username, password });
-
-            return res.status(201).json({
-                success: true,
-                message: 'Đăng ký tài khoản thành công',
                 data: newAccount
             });
         } catch (err) {

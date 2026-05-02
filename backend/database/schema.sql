@@ -43,6 +43,7 @@ CREATE TABLE room (
     gender_policy VARCHAR(10) CHECK (gender_policy IN ('Male', 'Female', 'Mixed')),
     total_beds INT NOT NULL DEFAULT 0,
     available_beds INT NOT NULL DEFAULT 0,
+    room_description TEXT DEFAULT '',
     status VARCHAR(50) DEFAULT 'Empty',
     area VARCHAR(100),
     room_type_id INT REFERENCES room_type(room_type_id),
@@ -90,6 +91,7 @@ CREATE TABLE tenant (
     phone VARCHAR(20),
     email VARCHAR(200),
     gender VARCHAR(10),
+    cccd_number TEXT,
     nationality VARCHAR(100) DEFAULT 'Vietnam'
 );
 
@@ -118,6 +120,7 @@ CREATE TABLE registration_request (
     registration_request_id SERIAL PRIMARY KEY,
     gender_policy VARCHAR(10),
     area VARCHAR(100),
+    description TEXT,
     room_type_id INT REFERENCES room_type(room_type_id),
     price_level DECIMAL(12,2),
     expected_date DATE,
@@ -239,14 +242,14 @@ CREATE TABLE refund_receipt (
 
 -- 21. Account (Auth)
 CREATE TABLE account (
-    account_id    SERIAL PRIMARY KEY,
-    username      VARCHAR(100) NOT NULL UNIQUE,
+    account_id SERIAL PRIMARY KEY,
+    username VARCHAR(100) NOT NULL UNIQUE,
+    tenant_id INT REFERENCES tenant(tenant_id),
+    employee_id INT REFERENCES employee(employee_id),
     password_hash TEXT NOT NULL,
-    role          VARCHAR(20) NOT NULL CHECK (role IN ('admin', 'employee', 'customer')),
-    employee_id   INT REFERENCES employee(employee_id),
-    tenant_id     INT REFERENCES tenant(tenant_id),
-    is_active     BOOLEAN DEFAULT TRUE,
-    created_at    TIMESTAMPTZ DEFAULT NOW()
+    role VARCHAR(20) NOT NULL CHECK (role IN ('admin', 'employee', 'customer')),
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 COMMIT;

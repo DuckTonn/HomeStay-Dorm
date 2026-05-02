@@ -36,6 +36,25 @@ class BedRepository extends BaseRepository {
         if (error) throw error;
         return data;
     }
+
+    async updatePricesByRoom(roomId, price) {
+        const { data, error } = await this.db
+            .from(this.tableName)
+            .update({ price })
+            .eq('room_id', roomId)
+            .select();
+        if (error) throw error;
+        return data;
+    }
+
+    async createMany(beds) {
+        const { data, error } = await this.db
+            .from(this.tableName)
+            .insert(beds)
+            .select();
+        if (error) throw error;
+        return data;
+    }
 }
 
 module.exports = new BedRepository();

@@ -9,7 +9,9 @@ class CreateRoomDTO extends BaseDTO {
             { field: 'status', required: false, type: 'string' },
             { field: 'area', required: false, type: 'string', maxLength: 100 },
             { field: 'room_type_id', required: true, type: 'integer' },
-            { field: 'branch_id', required: true, type: 'integer' }
+            { field: 'branch_id', required: true, type: 'integer' },
+            { field: 'room_description', required: false, type: 'string' },
+            { field: 'bed_price', required: false, type: 'number', min: 0 }
         ]);
         Object.assign(this, data);
     }
@@ -24,7 +26,9 @@ class UpdateRoomDTO extends BaseDTO {
             { field: 'status', required: false, type: 'string' },
             { field: 'area', required: false, type: 'string', maxLength: 100 },
             { field: 'room_type_id', required: false, type: 'integer' },
-            { field: 'branch_id', required: false, type: 'integer' }
+            { field: 'branch_id', required: false, type: 'integer' },
+            { field: 'room_description', required: false, type: 'string' },
+            { field: 'bed_price', required: false, type: 'number', min: 0 }
         ]);
         Object.assign(this, data);
     }
@@ -90,10 +94,21 @@ class RoomTypeResponse {
 class BedResponse {
     static serialize(bed) {
         if (!bed) return null;
+        console.log(JSON.stringify(bed, null, 2));
+        let tenant_phone = null;
+        if (Array.isArray(bed.contract_bed) && bed.contract_bed.length > 0) {
+            // Find the most recent or active contract
+            const contract = bed.contract_bed[0]?.contract;
+            if (contract && contract.tenant) {
+                tenant_phone = contract.tenant.phone;
+            }
+        }
+
         return {
             bed_id: bed.bed_id,
             status: bed.status,
-            price: Number(bed.price || 0)
+            price: Number(bed.price || 0),
+            tenant_phone: tenant_phone
         };
     }
 }
@@ -108,9 +123,11 @@ class RoomResponse {
             area: room.area ?? null,
             total_beds: room.total_beds,
             available_beds: room.available_beds,
+            room_description: room.room_description ?? null,
+            room_number: room.room_number,
             room_type: room.room_type ? RoomTypeResponse.serialize(room.room_type) : null,
             branch_id: room.branch_id ?? null,
-            branch: room.branch ? { branch_id: room.branch.branch_id, address: room.branch.address } : null,
+            branch: room.branch ? { branch_id: room.branch.branch_id, address: room.branch.address, phone_number: room.branch.phone_number, email: room.branch.email } : null,
             beds: Array.isArray(room.bed) ? room.bed.map(BedResponse.serialize) : []
         };
     }

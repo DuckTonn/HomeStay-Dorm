@@ -67,20 +67,97 @@ class AuthService {
     }
 
     async getMe(accountId) {
-        const account = await accountRepository.findByIdWithRelations(accountId);
+        let account = await accountRepository.findByIdWithRelations(accountId);
         if (!account) {
             const err = new Error('Tài khoản không tồn tại');
             err.type = 'business';
             err.status = 404;
             throw err;
         }
+
+
+        if (isNaN(account.tenant?.tenant_id)) {
+            const tenantRepository = require('../repositories/TenantRepository');
+            const tenant = await tenantRepository.create({ name: account.username, nationality: 'Vietnam' });
+            await accountRepository.update(account.account_id, { tenant_id: tenant.tenant_id });
+            account = await accountRepository.findByIdWithRelations(accountId);
+        }
+
         return account;
     }
 
+    async updateProfile(accountId, updates) {
+        let account = await accountRepository.findByIdWithRelations(accountId);
+        if (!account) {
+            const err = new Error('Tài khoản không tồn tại');
+            err.type = 'business';
+            err.status = 404;
+            throw err;
+        }
+
+        let targetTenantId = account.tenant?.tenant_id;
+
+        // If the account doesn't have a tenant record yet, create one so they can have a profile
+        if (!targetTenantId) {
+            const tenantRepository = require('../repositories/TenantRepository');
+            const newTenant = await tenantRepository.create({
+                name: updates.name || account.username,
+                nationality: updates.nationality || 'Vietnam'
+            });
+            await accountRepository.update(account.account_id, { tenant_id: newTenant.tenant_id });
+            targetTenantId = newTenant.tenant_id;
+        }
+
+        const tenantRepository = require('../repositories/TenantRepository');
+        const tenantUpdates = {
+            name: updates.name,
+            email: updates.email,
+            phone: updates.phone,
+            gender: updates.gender,
+            nationality: updates.nationality,
+            cccd_number: updates.cccd_number
+        };
+
+        const accountUpdates = {
+            username: updates.username
+        };
+
+        // Remove undefined fields
+        Object.keys(tenantUpdates).forEach(key => tenantUpdates[key] === undefined && delete tenantUpdates[key]);
+        Object.keys(accountUpdates).forEach(key => accountUpdates[key] === undefined && delete accountUpdates[key]);
+
+        if (Object.keys(tenantUpdates).length > 0) {
+            await tenantRepository.update(targetTenantId, tenantUpdates);
+        }
+
+        if (Object.keys(accountUpdates).length > 0) {
+            await accountRepository.update(accountId, accountUpdates);
+        }
+
+        return this.getMe(accountId);
+    }
+
     async register({ username, password, role, employeeId, tenantId }) {
+        let finalTenantId = tenantId;
+
+        if (role === 'customer' && !finalTenantId) {
+            const tenantRepository = require('../repositories/TenantRepository');
+            const tenant = await tenantRepository.create({
+                name: username,
+                nationality: 'Vietnam'
+            });
+            finalTenantId = tenant.tenant_id;
+        }
+
         const SALT_ROUNDS = 10;
         const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
-        return accountRepository.createAccount({ username, passwordHash, role, employeeId, tenantId });
+        return accountRepository.createAccount({
+            username,
+            passwordHash,
+            role,
+            employeeId,
+            tenantId: finalTenantId
+        });
     }
 
     async registerCustomer({ username, password }) {

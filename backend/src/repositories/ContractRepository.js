@@ -25,6 +25,34 @@ class ContractRepository extends BaseRepository {
         return this.findAll({ room_id: roomId });
     }
 
+    async findTenantsByRoom(roomId) {
+        const { data, error } = await this.db
+            .from('contract')
+            .select('contract_id, tenant:tenant_id(tenant_id, name, phone)')
+            .eq('room_id', roomId);
+        if (error) throw error;
+        // Deduplicate by tenant_id (a tenant may have multiple contracts)
+        const seen = new Set();
+        return (data || []).reduce((acc, c) => {
+            if (c.tenant && !seen.has(c.tenant.tenant_id)) {
+                seen.add(c.tenant.tenant_id);
+                acc.push(c.tenant);
+            }
+            return acc;
+        }, []);
+    }
+
+    async removeTenantFromRoom(roomId, tenantId) {
+        const { data, error } = await this.db
+            .from('contract')
+            .delete()
+            .eq('room_id', roomId)
+            .eq('tenant_id', tenantId)
+            .select();
+        if (error) throw error;
+        return data;
+    }
+
     async addBed(contractId, bedId) {
         const { data, error } = await this.db
             .from('contract_bed')

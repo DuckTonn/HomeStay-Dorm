@@ -18,9 +18,10 @@ export const RegisterPage = () => {
   const onSubmit = async (data: any) => {
     setErrorMsg("");
     try {
-      const response = await api.post("/auth/register-customer", {
+      const response = await api.post("/auth/register", {
         username: data.username,
-        password: data.password
+        password: data.password,
+        role: "customer"
       });
       if (response.data.success) {
         toast.success("Đăng ký thành công! Vui lòng đăng nhập.");
@@ -49,20 +50,22 @@ export const RegisterPage = () => {
       {/* 2. Credentials Form */}
       <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
         {errorMsg && <div className="text-red-500 text-center">{errorMsg}</div>}
-        
+
         <div>
-          <input 
-            type="text" 
+          <input
+            type="text"
+            name="email"
             placeholder="Email / Username"
             {...register("username", { required: "Vui lòng nhập tên đăng nhập" })}
             className="w-full h-14 rounded-lg border border-LightOutline px-6 text-lg placeholder:text-gray-400 outline-none focus:border-secondary focus:ring-1 focus:ring-secondary"
           />
           {errors.username && <span className="text-red-500 text-sm">{errors.username.message as string}</span>}
         </div>
-        
+
         <div>
-          <input 
-            type="password" 
+          <input
+            type="password"
+            name="password"
             placeholder="Mật khẩu"
             {...register("password", { required: "Vui lòng nhập mật khẩu", minLength: { value: 6, message: "Mật khẩu ít nhất 6 ký tự" } })}
             className="w-full h-14 rounded-lg border border-LightOutline px-6 text-lg placeholder:text-gray-400 outline-none focus:border-secondary focus:ring-1 focus:ring-secondary"
@@ -71,10 +74,11 @@ export const RegisterPage = () => {
         </div>
 
         <div>
-          <input 
-            type="password" 
+          <input
+            type="password"
+            name="confirmPassword"
             placeholder="Nhập lại mật khẩu"
-            {...register("confirmPassword", { 
+            {...register("confirmPassword", {
               required: "Vui lòng nhập lại mật khẩu",
               validate: value => value === password || "Mật khẩu không khớp"
             })}
@@ -84,8 +88,8 @@ export const RegisterPage = () => {
         </div>
 
         {/* Secondary Green Button */}
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className="h-[3rem] w-[14rem] mx-auto rounded-lg bg-secondary text-white text-lg font-medium transition-colors hover:cursor-pointer hover:bg-tirtiary"
         >
           Đăng ký

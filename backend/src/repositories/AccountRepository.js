@@ -24,13 +24,17 @@ class AccountRepository extends BaseRepository {
         return data;
     }
 
+    async update(id, updates) {
+        return super.update(id, updates, 'account_id');
+    }
+
     async findByIdWithRelations(accountId) {
         const { data, error } = await this.db
             .from(this.tableName)
             .select(`
                 account_id, username, role, is_active, created_at,
                 employee:employee_id (employee_id, name, role, branch_id),
-                tenant:tenant_id (tenant_id, name, email, phone)
+                tenant:tenant_id (tenant_id, name, email, phone, gender, nationality, cccd_number)
             `)
             .eq('account_id', accountId)
             .eq('is_active', true)

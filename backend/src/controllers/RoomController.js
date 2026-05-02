@@ -11,6 +11,7 @@ class RoomController {
         try {
             const result = await roomService.getAllRooms(req.query);
             const serialized = BaseDTO.serializeList(result, RoomResponse.serialize);
+            // console.log('data', serialized.data[0]);
             res.json({ success: true, ...serialized });
         } catch (error) { next(error); }
     }
@@ -43,6 +44,21 @@ class RoomController {
         } catch (error) { next(error); }
     }
 
+    async getRoomTenants(req, res, next) {
+        try {
+            const tenants = await roomService.getRoomTenants(req.params.id);
+            res.json({ success: true, data: tenants });
+        } catch (error) { next(error); }
+    }
+
+    async removeTenantFromRoom(req, res, next) {
+        try {
+            const { id, tenantId } = req.params;
+            await roomService.removeTenantFromRoom(id, tenantId);
+            res.json({ success: true, message: 'Đã xóa người thuê khỏi phòng' });
+        } catch (error) { next(error); }
+    }
+
     // --- Beds ---
     async getBedsByRoom(req, res, next) {
         try {
@@ -71,6 +87,13 @@ class RoomController {
         try {
             const data = await roomService.updateBed(req.params.id, req.body);
             res.json({ success: true, data: BedResponse.serialize(data) });
+        } catch (error) { next(error); }
+    }
+
+    async deleteBed(req, res, next) {
+        try {
+            await roomService.deleteBed(req.params.id);
+            res.json({ success: true, message: 'Đã xóa giường' });
         } catch (error) { next(error); }
     }
 

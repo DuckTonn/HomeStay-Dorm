@@ -4,7 +4,9 @@ const BaseDTO = require('./BaseDTO');
 class CreateBranchDTO extends BaseDTO {
     constructor(data) {
         super(data, [
-            { field: 'address', required: true, type: 'string', minLength: 1 }
+            { field: 'address', required: true, type: 'string', minLength: 1 },
+            { field: 'phone_number', required: true, type: 'string' },
+            { field: 'email', required: true, type: 'string' }
         ]);
         this.address = data.address;
     }
@@ -75,7 +77,9 @@ class BranchResponse {
         if (!branch) return null;
         return {
             branch_id: branch.branch_id,
-            address: branch.address
+            address: branch.address,
+            phone_number: branch.phone_number,
+            email: branch.email
         };
     }
 }

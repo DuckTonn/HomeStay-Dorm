@@ -25,7 +25,7 @@ class BaseRepository {
 
         const { data, count, error } = await query;
         if (error) throw error;
-        
+
         return {
             data,
             pagination: {
