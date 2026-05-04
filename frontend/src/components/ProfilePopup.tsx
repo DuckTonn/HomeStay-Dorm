@@ -29,7 +29,7 @@ const ProfilePopup: React.FC<ProfilePopupProps> = ({ isOpen, onClose, user }) =>
     defaultValues: {
       username: user?.username || '',
       name: tenant.name || user?.username || '',
-      email: tenant.email || '',
+      email: user?.email || '',
       phone: tenant.phone || '',
       gender: tenant.gender || 'Nam',
       nationality: tenant.nationality || 'Việt Nam',
@@ -42,13 +42,13 @@ const ProfilePopup: React.FC<ProfilePopupProps> = ({ isOpen, onClose, user }) =>
     reset({
       username: user?.username || '',
       name: tenant.name || '',
-      email: tenant.email || '',
+      email: user?.email || '',
       phone: tenant.phone || '',
       gender: tenant.gender || 'Nam',
       nationality: tenant.nationality || 'Việt Nam',
       cccd_number: tenant.cccd_number || '',
     });
-  }, [user, reset, tenant.name, tenant.email, tenant.phone, tenant.gender, tenant.nationality, tenant.cccd_number, user?.username]);
+  }, [user, reset, tenant.name, user.email, tenant.phone, tenant.gender, tenant.nationality, tenant.cccd_number, user?.username]);
 
   if (!isOpen) return null;
 
@@ -73,7 +73,7 @@ const ProfilePopup: React.FC<ProfilePopupProps> = ({ isOpen, onClose, user }) =>
   // Safe fallbacks for view mode
   const userNameDisplay = user?.username || 'Tên tài khoản';
   const nameDisplay = tenant.name || 'Chưa cập nhật';
-  const emailDisplay = tenant.email || 'Chưa cập nhật';
+  const emailDisplay = user.email || 'Chưa cập nhật';
   const phoneDisplay = tenant.phone || 'Chưa cập nhật';
   const genderDisplay = tenant.gender || 'Chưa cập nhật';
   const nationalityDisplay = tenant.nationality || 'Chưa cập nhật';
@@ -84,7 +84,9 @@ const ProfilePopup: React.FC<ProfilePopupProps> = ({ isOpen, onClose, user }) =>
   const leftLabelClass = "text-text/80 be-vietnam-pro-medium w-32 whitespace-nowrap";
 
   return (
-    <div className="absolute right-0 top-full mt-2 z-20 w-[420px] cursor-default text-left">
+    <div className="absolute 
+    md:right-0 max-md:left-1/2 max-md:-translate-x-1/2
+    top-full mt-2 z-20 w-[420px] cursor-default text-left">
       <div className="relative w-full rounded-2xl bg-white px-4 py-6 shadow-xl be-vietnam-pro-light border border-LightOutline text-size-base">
 
         {/* Close Button */}

@@ -11,9 +11,17 @@ class RoomController {
         try {
             const result = await roomService.getAllRooms(req.query);
             const serialized = BaseDTO.serializeList(result, RoomResponse.serialize);
-            // console.log('data', serialized.data[0]);
             res.json({ success: true, ...serialized });
         } catch (error) { next(error); }
+    }
+
+    async addRoomImages(req, res, next) {
+        try {
+            const result = await roomService.addImages(req.params.id, req.files);
+            const serialized = BaseDTO.serializeOne(result, RoomResponse.serialize);
+            res.json({ success: true, data: serialized });
+        }
+        catch (error) { next(error); }
     }
 
     async getRoomById(req, res, next) {
@@ -124,6 +132,14 @@ class RoomController {
         try {
             const data = await roomService.deleteRoomType(req.params.id);
             res.json({ success: true, data });
+        } catch (error) { next(error); }
+    }
+
+    async getSimilarRooms(req, res, next) {
+        try {
+            const result = await roomService.getSimilarRooms(req.params.id);
+            const serialized = BaseDTO.serializeList(result, RoomResponse.serialize);
+            res.json({ success: true, ...serialized });
         } catch (error) { next(error); }
     }
 }

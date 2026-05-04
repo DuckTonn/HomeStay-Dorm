@@ -48,12 +48,12 @@ export const LoginPage = () => {
         
         <div>
           <input 
-            type="text" 
-            placeholder="Email / Username"
-            {...register("username", { required: true })}
+            type="email" 
+            placeholder="Email"
+            {...register("email", { required: true })}
             className="w-full h-14 rounded-lg border border-LightOutline px-6 text-lg placeholder:text-gray-400 outline-none focus:border-secondary focus:ring-1 focus:ring-secondary"
           />
-          {errors.username && <span className="text-red-500 text-sm">Vui lòng nhập tên đăng nhập</span>}
+          {errors.email && <span className="text-red-500 text-sm">Vui lòng nhập email</span>}
         </div>
         
         <div>

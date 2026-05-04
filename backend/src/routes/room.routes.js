@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/RoomController');
 const { validateDTO } = require('../middlewares/validateDTO');
+const upload = require('../middlewares/upload');
 const {
     CreateRoomDTO,
     UpdateRoomDTO,
@@ -31,9 +32,11 @@ router.delete('/bed/:id', (req, res, next) => controller.deleteBed(req, res, nex
 router.get('/', (req, res, next) => controller.getAllRooms(req, res, next));
 router.get('/:id/tenants', (req, res, next) => controller.getRoomTenants(req, res, next));
 router.delete('/:id/tenants/:tenantId', (req, res, next) => controller.removeTenantFromRoom(req, res, next));
+router.get('/:id/similar', (req, res, next) => controller.getSimilarRooms(req, res, next));
 router.get('/:id', (req, res, next) => controller.getRoomById(req, res, next));
 router.post('/', validateDTO(CreateRoomDTO), (req, res, next) => controller.createRoom(req, res, next));
 router.put('/:id', validateDTO(UpdateRoomDTO), (req, res, next) => controller.updateRoom(req, res, next));
 router.delete('/:id', (req, res, next) => controller.deleteRoom(req, res, next));
+router.post('/:id/images', upload.array('images', 10), (req, res, next) => controller.addRoomImages(req, res, next));
 
 module.exports = router;

@@ -46,8 +46,10 @@ CREATE TABLE room (
     room_description TEXT DEFAULT '',
     status VARCHAR(50) DEFAULT 'Empty',
     area VARCHAR(100),
+    room_number INT,
     room_type_id INT REFERENCES room_type(room_type_id),
-    branch_id INT REFERENCES branch(branch_id)
+    branch_id INT REFERENCES branch(branch_id),
+    room_images TEXT[] DEFAULT '{}',
 );
 
 -- 6. Bed
@@ -89,7 +91,6 @@ CREATE TABLE tenant (
     tenant_id SERIAL PRIMARY KEY,
     name VARCHAR(200) NOT NULL,
     phone VARCHAR(20),
-    email VARCHAR(200),
     gender VARCHAR(10),
     cccd_number TEXT,
     nationality VARCHAR(100) DEFAULT 'Vietnam'
@@ -246,6 +247,7 @@ CREATE TABLE account (
     username VARCHAR(100) NOT NULL UNIQUE,
     tenant_id INT REFERENCES tenant(tenant_id),
     employee_id INT REFERENCES employee(employee_id),
+    email TEXT NOT NULL UNIQUE,
     password_hash TEXT NOT NULL,
     role VARCHAR(20) NOT NULL CHECK (role IN ('admin', 'employee', 'customer')),
     is_active BOOLEAN DEFAULT TRUE,

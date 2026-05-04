@@ -157,6 +157,12 @@ const RoomManagement = () => {
         return `${format(minPrice)} - ${format(maxPrice)}/tháng`;
     };
 
+    const getGenderLabel = (room: RoomData) => {
+        if (room.gender_policy === "Male") return "Nam";
+        if (room.gender_policy === "Female") return "Nữ";
+        return "Nam/Nữ";
+    }
+
     const getRawPrice = (room: RoomData) => {
         if (!room.beds || room.beds.length === 0) return 0;
         const minPrice = Math.min(...room.beds.map(b => Number(b.price) || 0));
@@ -186,7 +192,7 @@ const RoomManagement = () => {
                 room_id: selectedRoom.room_id,
                 price: defaultPrice
             });
-            
+
             if (response.data?.success) {
                 // Refresh rooms to get updated counts and bed list
                 await fetchRooms();
@@ -321,7 +327,7 @@ const RoomManagement = () => {
                                             className={`border-b border-LightOutline/50 transition-colors ${isEditing ? 'cursor-not-allowed opacity-80' : 'cursor-pointer'} ${selectedRoom?.room_id === room.room_id ? 'bg-secondary/10' : !isEditing && 'hover:bg-LightOutline/10'}`}
                                         >
                                             <td className="py-4 px-6 text-left be-vietnam-pro-medium">{getRoomLabel(room)}</td>
-                                            <td className="py-4 px-6">{room.gender_policy}</td>
+                                            <td className="py-4 px-6">{getGenderLabel(room)}</td>
                                             <td className="py-4 px-6">{room.total_beds}</td>
                                             <td className="py-4 px-6">{room.available_beds}</td>
                                             <td className="py-4 px-6">
@@ -375,7 +381,7 @@ const RoomManagement = () => {
                                                     <th className="py-3 px-6 text-center">Sđt khách</th>
                                                     {selectedRoom && (
                                                         <th className="py-3 px-6 justify-center">
-                                                            <div 
+                                                            <div
                                                                 onClick={handleAddBed}
                                                                 className="w-fit h-fit bg-secondary rounded-full p-2 hover:bg-tirtiary hover:cursor-pointer mx-auto transition-transform active:scale-95"
                                                                 title="Thêm giường"

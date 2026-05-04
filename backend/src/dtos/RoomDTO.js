@@ -94,7 +94,6 @@ class RoomTypeResponse {
 class BedResponse {
     static serialize(bed) {
         if (!bed) return null;
-        console.log(JSON.stringify(bed, null, 2));
         let tenant_phone = null;
         if (Array.isArray(bed.contract_bed) && bed.contract_bed.length > 0) {
             // Find the most recent or active contract
@@ -127,6 +126,7 @@ class RoomResponse {
             room_number: room.room_number,
             room_type: room.room_type ? RoomTypeResponse.serialize(room.room_type) : null,
             branch_id: room.branch_id ?? null,
+            room_images: room?.room_images ? room.room_images : [],
             branch: room.branch ? { branch_id: room.branch.branch_id, address: room.branch.address, phone_number: room.branch.phone_number, email: room.branch.email } : null,
             beds: Array.isArray(room.bed) ? room.bed.map(BedResponse.serialize) : []
         };

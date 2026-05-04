@@ -9,6 +9,7 @@ export type RoomData = {
   room_type: { room_type_id: number; name: string } | null;
   branch_id: number | null;
   room_number: number | null;
+  room_images: string[] | null;
   branch: { branch_id: number; address: string, phone_number: string, email: string } | null;
   beds: { bed_id: number; status: string; price: number }[];
 }

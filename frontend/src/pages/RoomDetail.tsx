@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import ItemCardS from "@/components/ItemCardS";
-import roomImage from "@/assets/MockRoom.webp";
+import roomImage from "@/assets/images/no_preview.webp";
 import mapPinIcon from "@/assets/icons/MapPin.svg";
 import phoneIcon from "@/assets/icons/Phone.svg";
 import emailIcon from "@/assets/icons/Mail.svg";
 import api from "@/lib/axios";
 import type { RoomData } from "@/types/room";
+import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 
 export const RoomDetailPage = () => {
-  const location = useLocation();
+  const [selectedImage, setSelectedImage] = useState(0)
+    ; const location = useLocation();
   const room = location.state?.room as RoomData | undefined;
+  const { user } = useAuth();
+
+  console.log(room);
 
   const getGenderText = (policy: string | undefined) => {
     if (policy === 'Male') return 'Phòng nam';
@@ -37,11 +42,12 @@ export const RoomDetailPage = () => {
 
   useEffect(() => {
     const fetchRooms = async () => {
+      if (!room?.room_id) return;
       setLoading(true);
       try {
-        const response = await api.get('/room?limit=4');
+        const response = await api.get(`/room/${room.room_id}/similar`);
         if (response.data && response.data.success) {
-          setSimilarRooms(response.data.data.slice(0, 4));
+          setSimilarRooms(response.data.data);
         }
       } catch (error) {
         console.error("Failed to fetch similar rooms", error);
@@ -49,11 +55,11 @@ export const RoomDetailPage = () => {
         setLoading(false);
       }
     };
-    console.log(room);
     fetchRooms();
-  }, []);
+  }, [room?.room_id]);
 
   const title = `CS ${room?.branch?.branch_id}. ${room?.room_number}` || "Đang cập nhật";
+  const image_quantity = room?.room_images?.length || 0;
 
   return (
     <div className="w-full flex flex-col pb-10 mx-auto">
@@ -65,15 +71,21 @@ export const RoomDetailPage = () => {
         <div className="w-full md:w-2/3 h-fit flex flex-col gap-3 bg-white/25 rounded-2xl p-5 border border-LightOutline">
           {/* Main Photo */}
           <div className="w-full h-[22rem] rounded-2xl overflow-hidden bg-LightOutline shadow-sm">
-            <img src={roomImage} className="w-full h-full object-cover" alt="Main Room" />
+            <img src={room?.room_images?.[selectedImage] || roomImage} className="w-full h-full object-cover" alt="Main Room" />
           </div>
+
           {/* Small Photos */}
-          <div className="flex gap-3 overflow-x-scroll w-full no-scrollbar">
-            <img src={roomImage} className="w-1/4 h-full object-cover rounded-xl border-2 border-transparent hover:border-secondary cursor-pointer transition-colors shadow-sm" alt="Room 1" />
-            <img src={roomImage} className="w-1/4 h-full object-cover rounded-xl border-2 border-transparent hover:border-secondary cursor-pointer transition-colors shadow-sm" alt="Room 2" />
-            <img src={roomImage} className="w-1/4 h-full object-cover rounded-xl border-2 border-transparent hover:border-secondary cursor-pointer transition-colors shadow-sm" alt="Room 3" />
-            <img src={roomImage} className="w-1/4 h-full object-cover rounded-xl border-2 border-transparent hover:border-secondary cursor-pointer transition-colors shadow-sm" alt="Room 4" />
-          </div>
+          {image_quantity > 0 ? (
+            <div className="flex gap-3 overflow-x-scroll w-full no-scrollbar h-[8rem]">
+              {room?.room_images?.map((image, index) => (
+                <button className="w-1/4 h-full" onClick={() => setSelectedImage(index)}>
+                  <img key={index} src={image} className="h-full w-full object-cover rounded-xl border-2 border-transparent hover:border-secondary cursor-pointer transition-colors shadow-sm" alt={`Room ${index + 1}`} />
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div className="w-full flex justify-center items-center h-full text-text min-h-[10rem]">Không có ảnh</div>
+          )}
 
           {/* Bottom Section */}
           <div className="mt-8 ">

@@ -1,6 +1,6 @@
 import homeIcon from "@/assets/icons/Room.svg";
 import mapPinIcon from "@/assets/icons/MapPin.svg";
-import roomImage from "@/assets/MockRoom.webp";
+import roomImage from "@/assets/images/no_preview.webp";
 import { Link } from "react-router-dom";
 import type { RoomData } from "@/types/room";
 
@@ -33,12 +33,12 @@ const ItemCardL = ({ room }: ItemCardLProps) => {
     <Link
       to="/room-detail"
       state={{ room }}
-      className="w-full max-w-[17.5rem] flex flex-col p-2 overflow-hidden rounded-2xl border border-LightOutline bg-white/30 shadow-sm transition-shadow hover:shadow-md be-vietnam-pro-light cursor-pointer block"
+      className="w-full max-w-[17.5rem] flex flex-col p-2 overflow-hidden rounded-2xl border border-LightOutline bg-white/30 shadow-sm transition-shadow hover:shadow-md be-vietnam-pro-light cursor-pointer block hover:scale-103 transition-transform "
     >
       <article className="w-full h-full flex flex-col">
-        <div className="relative h-fit overflow-hidden w-full rounded-xl">
+        <div className="relative h-[12rem] overflow-hidden w-full rounded-xl">
           <img
-            src={roomImage}
+            src={room?.room_images?.[0] || roomImage}
             alt={title}
             className="h-full w-full rounded-xl object-cover"
           />

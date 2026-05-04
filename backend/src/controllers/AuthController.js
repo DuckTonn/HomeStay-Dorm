@@ -7,8 +7,8 @@ class AuthController {
      */
     async login(req, res, next) {
         try {
-            const { username, password } = req.body;
-            const result = await authService.login(username, password);
+            const { email, password } = req.body;
+            const result = await authService.login(email, password);
 
             return res.status(200).json({
                 success: true,
@@ -62,12 +62,12 @@ class AuthController {
      */
     async register(req, res, next) {
         try {
-            const { username, password, role, employee_id, tenant_id } = req.body;
+            const { email, password, role, employee_id, tenant_id } = req.body;
 
-            if (!username || !password || !role) {
+            if (!email || !password || !role) {
                 return res.status(400).json({
                     success: false,
-                    message: 'username, password và role là bắt buộc'
+                    message: 'email, password và role là bắt buộc'
                 });
             }
 
@@ -80,7 +80,7 @@ class AuthController {
             }
 
             const newAccount = await authService.register({
-                username,
+                email,
                 password,
                 role,
                 employeeId: employee_id || null,
@@ -103,8 +103,8 @@ class AuthController {
      */
     async forgotPassword(req, res, next) {
         try {
-            const { username } = req.body;
-            const result = await authService.forgotPassword(username);
+            const { email } = req.body;
+            const result = await authService.forgotPassword(email);
 
             return res.status(200).json({
                 success: true,
@@ -121,8 +121,8 @@ class AuthController {
      */
     async resetPassword(req, res, next) {
         try {
-            const { username, otp, newPassword } = req.body;
-            const result = await authService.resetPassword(username, otp, newPassword);
+            const { email, otp, newPassword } = req.body;
+            const result = await authService.resetPassword(email, otp, newPassword);
 
             return res.status(200).json({
                 success: true,

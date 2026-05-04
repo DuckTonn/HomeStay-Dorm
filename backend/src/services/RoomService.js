@@ -28,11 +28,15 @@ class RoomService {
             branch_id: parseNumber(filters.branch_id) ?? filters.branch_id,
             room_type_id: parseNumber(filters.room_type_id) ?? filters.room_type_id,
             people_count: parseNumber(filters.people_count) ?? filters.people_count,
-            min_price: parseNumber(filters.min_price) ?? filters.min_price,
-            max_price: parseNumber(filters.max_price) ?? filters.max_price,
+            min_price: parseNumber(filters.min_price ?? filters.minPrice),
+            max_price: parseNumber(filters.max_price ?? filters.maxPrice),
             price_level: parseNumber(filters.price_level) ?? filters.price_level,
-            room_number: String(filters.room_number ?? '')
+            room_number: String(filters.room_number ?? ''),
+            available_beds: parseNumber(filters.available_beds),
+            sign: filters.sign,
+            search: filters.search,
         };
+
 
         return roomRepository.findAvailable(normalizedFilters);
     }
@@ -64,6 +68,29 @@ class RoomService {
         }
 
         return room;
+    }
+
+    /**
+   * Append image URLs to a room's room_images array.
+   * @param {number} roomId
+   * @param {string[]} urls
+   * @returns {Promise<Object>} Updated room record
+   */
+    async addImages(roomId, urls) {
+        // Use PostgreSQL array concatenation (||) to add new URLs
+        const { data, error } = await this.db
+            .from('room')
+            .update({
+                room_images: this.db.raw('room_images || ?', [urls]),
+            })
+            .eq('room_id', roomId)
+            .select('*')
+            .single();
+        if (error) {
+            if (error.code === 'PGRST116') return null; // not found
+            throw error;
+        }
+        return data;
     }
 
     async updateRoom(roomId, data) {
@@ -153,6 +180,20 @@ class RoomService {
 
     async deleteRoomType(roomTypeId) {
         return roomTypeRepository.delete(roomTypeId);
+    }
+
+    async getSimilarRooms(roomId) {
+        const room = await this.getRoomById(roomId);
+        const roomTypeId = room.room_type_id;
+
+        // Use the price of the first bed as reference
+        // (Assuming all beds in a room usually have the same price)
+        const referencePrice = (room.bed && room.bed.length > 0) ? Number(room.bed[0].price) : 0;
+
+        const minPrice = referencePrice - 1000;
+        const maxPrice = referencePrice + 1000;
+
+        return roomRepository.findSimilar(roomId, roomTypeId, minPrice, maxPrice);
     }
 }
 

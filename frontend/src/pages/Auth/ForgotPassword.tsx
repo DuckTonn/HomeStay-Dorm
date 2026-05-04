@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 
 export const ForgetPasswordPage = () => {
   const [step, setStep] = useState<1 | 2>(1);
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const { register, handleSubmit, formState: { errors }, watch } = useForm();
   const navigate = useNavigate();
@@ -18,9 +18,9 @@ export const ForgetPasswordPage = () => {
   const onSubmitEmail = async (data: any) => {
     setErrorMsg("");
     try {
-      const response = await api.post("/auth/forgot-password", { username: data.username });
+      const response = await api.post("/auth/forgot-password", { email: data.email });
       if (response.data.success) {
-        setUsername(data.username);
+        setEmail(data.email);
         setStep(2);
         toast.success("Đã gửi OTP về email của bạn (Check console/network cho mock OTP)");
         console.log("Mock OTP Template:", response.data.emailTemplate);
@@ -34,7 +34,7 @@ export const ForgetPasswordPage = () => {
     setErrorMsg("");
     try {
       const response = await api.post("/auth/reset-password", {
-        username: username,
+        email: email,
         otp: data.otp,
         newPassword: data.newPassword
       });
@@ -64,12 +64,12 @@ export const ForgetPasswordPage = () => {
             {errorMsg && <div className="text-red-500 text-center">{errorMsg}</div>}
             <div>
               <input 
-                type="text" 
-                placeholder="Điền email/tên đăng nhập"
-                {...register("username", { required: "Vui lòng nhập email/tên đăng nhập" })}
+                type="email" 
+                placeholder="Điền email"
+                {...register("email", { required: "Vui lòng nhập email" })}
                 className="w-full h-14 rounded-lg border border-LightOutline px-6 text-lg placeholder:text-gray-400 outline-none focus:border-primary focus:ring-1 focus:ring-primary"
               />
-              {errors.username && <span className="text-red-500 text-sm">{errors.username.message as string}</span>}
+              {errors.email && <span className="text-red-500 text-sm">{errors.email.message as string}</span>}
             </div>
 
             <button 
@@ -87,7 +87,7 @@ export const ForgetPasswordPage = () => {
               Nhập mã OTP
             </h1>
             <p className="text-lg text-text/80 leading-relaxed max-w-md mx-auto">
-              Nhập mã OTP đã gửi đến {username} và thiết lập mật khẩu mới.
+              Nhập mã OTP đã gửi đến {email} và thiết lập mật khẩu mới.
             </p>
           </div>
 

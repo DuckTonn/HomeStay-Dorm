@@ -19,7 +19,7 @@ export const RegisterPage = () => {
     setErrorMsg("");
     try {
       const response = await api.post("/auth/register", {
-        username: data.username,
+        email: data.email,
         password: data.password,
         role: "customer"
       });
@@ -53,13 +53,18 @@ export const RegisterPage = () => {
 
         <div>
           <input
-            type="text"
-            name="email"
-            placeholder="Email / Username"
-            {...register("username", { required: "Vui lòng nhập tên đăng nhập" })}
+            type="email"
+            placeholder="Email"
+            {...register("email", { 
+              required: "Vui lòng nhập email",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "Email không hợp lệ"
+              }
+            })}
             className="w-full h-14 rounded-lg border border-LightOutline px-6 text-lg placeholder:text-gray-400 outline-none focus:border-secondary focus:ring-1 focus:ring-secondary"
           />
-          {errors.username && <span className="text-red-500 text-sm">{errors.username.message as string}</span>}
+          {errors.email && <span className="text-red-500 text-sm">{errors.email.message as string}</span>}
         </div>
 
         <div>
