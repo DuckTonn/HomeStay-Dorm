@@ -150,7 +150,9 @@ CREATE TABLE viewing_appointment (
     confirmation_status VARCHAR(50) DEFAULT 'Unconfirmed',
     appointment_type VARCHAR(50),
     registration_request_id INT REFERENCES registration_request(registration_request_id),
+    room_id INT REFERENCES room(room_id),
     sales_employee_id INT REFERENCES employee(employee_id)
+    room_id INT REFERENCES room(room_id),
 );
 
 -- 16. Deposit receipt

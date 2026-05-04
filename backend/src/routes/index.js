@@ -10,6 +10,7 @@ const checkOutRoutes = require('./checkOut.routes');
 const roomRoutes = require('./room.routes');
 const employeeRoutes = require('./employee.routes');
 const branchRoutes = require('./branch.routes');
+const appointmentRoutes = require('./appointment.routes');
 
 
 router.use('/auth', authRoutes);
@@ -17,6 +18,7 @@ router.use('/registration', registrationRoutes);
 router.use('/deposit', depositRoutes);
 router.use('/check-in', checkInRoutes);
 router.use('/check-out', checkOutRoutes);
+router.use('/appointment', appointmentRoutes);
 
 
 router.use('/room', roomRoutes);

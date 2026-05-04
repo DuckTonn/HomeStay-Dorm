@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import ItemCardS from "@/components/ItemCardS";
+import { ViewingBookingModal } from "@/components/ViewingBookingModal";
 import roomImage from "@/assets/images/no_preview.webp";
 import mapPinIcon from "@/assets/icons/MapPin.svg";
 import phoneIcon from "@/assets/icons/Phone.svg";
@@ -13,6 +14,7 @@ export const RoomDetailPage = () => {
   const [selectedImage, setSelectedImage] = useState(0)
     ; const location = useLocation();
   const room = location.state?.room as RoomData | undefined;
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const { user } = useAuth();
 
   console.log(room);
@@ -102,9 +104,13 @@ export const RoomDetailPage = () => {
 
         {/* Right Side: Info Card */}
         <div className="w-full md:w-1/3 h-fit flex flex-col p-5 rounded-2xl border border-LightOutline bg-white/25 be-vietnam-pro-light">
-          <h1 className="text-size-large be-vietnam-pro-medium text-text mb-5 leading-tight">
-            {title}
-          </h1>
+          <div className="flex justify-between w-full ">
+            <h1 className="text-size-large be-vietnam-pro-medium text-text mb-5 leading-tight">
+              {title}
+            </h1>
+
+            <p className={`text-size-small ${room?.room_type.room_type_id === 2 ? "text-primary be-vietnam-pro-regular" : "text-text/50 be-vietnam-pro-light"}`}>Phòng {room?.room_type.name.toLowerCase() || "Chưa cập nhật"}</p>
+          </div>
 
           <div className="flex justify-between items-center mb-6 text-size-base">
             <span className="text-text/90">{getGenderText(room?.gender_policy)}</span>
@@ -144,12 +150,21 @@ export const RoomDetailPage = () => {
           </div>
 
           <div className="mt-auto flex justify-center">
-            <button className="w-fit px-8 py-2.5 rounded-lg border border-secondary text-secondary be-vietnam-pro-medium hover:bg-secondary hover:text-white transition-all duration-300">
+            <button
+              onClick={() => setIsBookingModalOpen(true)}
+              className="w-fit px-8 py-2.5 rounded-lg border border-secondary text-secondary be-vietnam-pro-medium hover:bg-secondary hover:text-white transition-all duration-300"
+            >
               Đặt lịch xem phòng
             </button>
           </div>
         </div>
       </div>
+
+      <ViewingBookingModal
+        isOpen={isBookingModalOpen}
+        onClose={() => setIsBookingModalOpen(false)}
+        room={room}
+      />
     </div>
   );
 };

@@ -24,7 +24,7 @@ class RegistrationRequestDTO extends BaseDTO {
             { field: 'expected_date', required: true, type: 'date' },
             { field: 'duration', required: false, type: 'string', maxLength: 100 },
             { field: 'rental_type', required: true, type: 'string', enum: ['Whole Room', 'Shared Room'] },
-            { field: 'sales_employee_id', required: true, type: 'integer' },
+            { field: 'sales_employee_id', required: false, type: 'integer' },
             { field: 'number_of_people', required: false, type: 'integer', min: 1 }
         ]);
         Object.assign(this, data);
@@ -132,6 +132,7 @@ class AppointmentResponse {
             status: appointment.status,
             confirmation_status: appointment.confirmation_status,
             registration_request_id: appointment.registration_request_id,
+            room_id: appointment.room_id,
             sales_employee_id: appointment.sales_employee_id
         };
     }

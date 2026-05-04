@@ -4,10 +4,14 @@ const registrationRequestRepository = require('../repositories/RegistrationReque
 const viewingAppointmentRepository = require('../repositories/ViewingAppointmentRepository');
 const roomRepository = require('../repositories/RoomRepository');
 const rentalCriteriaRepository = require('../repositories/RentalCriteriaRepository');
+const supabase = require('../config/supabase');
 const { createBusinessError } = require('../middlewares/validator');
 
 
 class RegistrationService {
+    constructor() {
+        this.db = supabase.getClient();
+    }
     async createRegistration(data) {
         // Create or load tenant
         const inputTenant = data.tenant;
@@ -91,7 +95,7 @@ class RegistrationService {
             confirmation_status: 'Unconfirmed',
             appointment_type: data.appointment_type || 'Viewing',
             registration_request_id: data.registration_request_id,
-            sales_employee_id: request.sales_employee_id
+            sales_employee_id: data.sales_employee_id || request.sales_employee_id
         });
 
         await registrationRequestRepository.update(data.registration_request_id, { status: 'Appointment Scheduled' });

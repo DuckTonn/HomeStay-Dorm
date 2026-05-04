@@ -3,8 +3,12 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import UserMenu from "@/components/UserMenu";
 
+import phoneIcon from "@/assets/icons/Phone.svg";
+import emailIcon from "@/assets/icons/Mail.svg";
+
 const Header = () => {
   const [passThreshold, setPassThreshold] = useState(false);
+  const [isContactOpen, setIsContactOpen] = useState(false);
   const { isAuthenticated } = useAuth();
 
   useEffect(() => {
@@ -20,6 +24,17 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (isContactOpen && !target.closest('.contact-dropdown-container')) {
+        setIsContactOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isContactOpen]);
+
   return (
     <header
       className={`fixed z-50 be-vietnam-pro-light bg-background/35 backdrop-blur-[3px] flex items-center justify-center
@@ -29,10 +44,30 @@ const Header = () => {
         }`}
     >
       {/* Left Section */}
-      <div className="flex-1 justify-start items-center w-fit gap-2 hidden md:flex">
-        <Link to="/#" className="text-text transition-colors hover:text-primary whitespace-nowrap">
+      <div className="flex-1 justify-start items-center w-fit gap-2 hidden md:flex contact-dropdown-container relative">
+        <button
+          onClick={() => setIsContactOpen(!isContactOpen)}
+          className="text-text transition-colors hover:text-primary whitespace-nowrap cursor-pointer outline-none"
+        >
           Liên hệ
-        </Link>
+        </button>
+
+        {isContactOpen && (
+          <div className="absolute top-full left-0 mt-3 w-max min-w-[200px] bg-white border border-LightOutline rounded-2xl p-5 shadow-xl z-50 flex flex-col gap-4 animate-in fade-in slide-in-from-top-2 duration-200">
+            <div className="flex items-center gap-3 text-text hover:text-primary transition-colors cursor-default">
+              <div className="p-2 rounded-full bg-primary/10">
+                <img src={phoneIcon} className="w-4 h-4" alt="Phone" style={{ filter: 'invert(52%) sepia(35%) saturate(543%) hue-rotate(95deg) brightness(93%) contrast(85%)' }} />
+              </div>
+              <span className="be-vietnam-pro-medium text-size-small">0987 654 321</span>
+            </div>
+            <div className="flex items-center gap-3 text-text hover:text-primary transition-colors cursor-default">
+              <div className="p-2 rounded-full bg-primary/10">
+                <img src={emailIcon} className="w-4 h-4" alt="Email" style={{ filter: 'invert(52%) sepia(35%) saturate(543%) hue-rotate(95deg) brightness(93%) contrast(85%)' }} />
+              </div>
+              <span className="be-vietnam-pro-medium text-size-small">homestay.dorm@gmail.com</span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Center Section: Brand/Logo (Fades out and shrinks) */}
