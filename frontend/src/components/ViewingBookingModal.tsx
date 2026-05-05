@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "@/lib/axios";
 import { useAuth } from "@/contexts/AuthContext";
-import crossIcon from "@/assets/icons/Cross.svg";
-
+import loginIcon from "@/assets/icons/Login.svg";
 interface ViewingBookingModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -67,33 +66,33 @@ export const ViewingBookingModal: React.FC<ViewingBookingModalProps> = ({
         <div className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md relative animate-in fade-in zoom-in duration-300">
           <button
             onClick={onClose}
-            className="absolute top-5 right-5 p-2 hover:bg-gray-100 rounded-full transition-colors"
+            className="absolute top-5 right-5 hover:cursor-pointer hover:opacity-75"
           >
-            <img src={crossIcon} alt="Close" className="w-4 h-4 opacity-50" />
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
           </button>
 
           <div className="flex flex-col items-center text-center gap-6">
             <div className="w-16 h-16 bg-secondary/10 rounded-full flex items-center justify-center">
-              <svg className="w-8 h-8 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m0 0v2m0-2h2m-2 0H10m11-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+              <img src={loginIcon} alt="Login" className="w-8 h-8" />
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-xl be-vietnam-pro-bold text-text">Bạn chưa đăng nhập</h2>
-              <p className="text-text/70 be-vietnam-pro-light">Vui lòng đăng nhập hoặc đăng ký để đặt lịch xem phòng.</p>
+              <h2 className="text-size-xl be-vietnam-pro-medium text-text">Bạn chưa đăng nhập</h2>
+              <p className="text-text/70 be-vietnam-pro-light text-size-base">Vui lòng đăng nhập hoặc đăng ký để đặt lịch xem phòng.</p>
             </div>
 
             <div className="flex flex-col w-full gap-3">
               <button
                 onClick={() => navigate("/login")}
-                className="w-full py-3 bg-secondary text-white rounded-xl be-vietnam-pro-medium hover:bg-primary transition-colors shadow-lg shadow-secondary/20"
+                className="w-full py-3 text-size-base bg-secondary text-white rounded-xl be-vietnam-pro-medium hover:bg-tirtiary shadow-lg shadow-secondary/20 hover:cursor-pointer"
               >
                 Đăng nhập
               </button>
               <button
                 onClick={() => navigate("/register")}
-                className="w-full py-3 border border-secondary text-secondary rounded-xl be-vietnam-pro-medium hover:bg-secondary/5 transition-colors"
+                className="w-full py-3 text-size-base border border-secondary text-secondary rounded-xl be-vietnam-pro-medium hover:bg-secondary hover:text-background hover:cursor-pointer"
               >
                 Đăng ký
               </button>
@@ -143,7 +142,7 @@ export const ViewingBookingModal: React.FC<ViewingBookingModalProps> = ({
                 required
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="flex-1 bg-white border border-gray-300 rounded-xl px-4 py-2.5 outline-none focus:border-secondary transition-colors text-text"
+                className="flex-1 bg-white border border-gray-300 rounded-xl px-4 py-2.5 outline-none focus:border-secondary text-text"
               />
             </div>
 
@@ -152,7 +151,7 @@ export const ViewingBookingModal: React.FC<ViewingBookingModalProps> = ({
               <select
                 value={beds}
                 onChange={(e) => setBeds(e.target.value)}
-                className="flex-1 bg-white border border-gray-300 rounded-xl px-4 py-2.5 outline-none focus:border-secondary transition-colors text-text appearance-none cursor-pointer"
+                className="flex-1 bg-white border border-gray-300 rounded-xl px-4 py-2.5 outline-none focus:border-secondary text-text appearance-none cursor-pointer"
               >
                 {[1, 2, 3, 4, 5, 6].map(n => (
                   <option key={n} value={n}>{n}</option>
@@ -167,7 +166,7 @@ export const ViewingBookingModal: React.FC<ViewingBookingModalProps> = ({
                 required
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="flex-1 bg-white border border-gray-300 rounded-xl px-4 py-2.5 outline-none focus:border-secondary transition-colors text-text"
+                className="flex-1 bg-white border border-gray-300 rounded-xl px-4 py-2.5 outline-none focus:border-secondary text-text"
               />
             </div>
 
@@ -178,7 +177,7 @@ export const ViewingBookingModal: React.FC<ViewingBookingModalProps> = ({
                 required
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="flex-1 bg-white border border-gray-300 rounded-xl px-4 py-2.5 outline-none focus:border-secondary transition-colors text-text"
+                className="flex-1 bg-white border border-gray-300 rounded-xl px-4 py-2.5 outline-none focus:border-secondary text-text"
               />
             </div>
 
@@ -188,7 +187,7 @@ export const ViewingBookingModal: React.FC<ViewingBookingModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-12 py-2.5 border border-[#A9C69A] text-[#74A684] rounded-xl be-vietnam-pro-medium hover:bg-secondary/5 transition-colors"
+                className="px-12 py-2.5 border border-[#A9C69A] text-[#74A684] rounded-xl be-vietnam-pro-medium hover:bg-secondary/5"
               >
                 Hủy
               </button>

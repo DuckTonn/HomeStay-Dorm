@@ -40,7 +40,7 @@ export const SearchBar = () => {
       />
       <button
         onClick={handleSearch}
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary transition-colors hover:bg-primary"
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary transition-colors hover:bg-tirtiary hover:cursor-pointer"
       >
         <img src={searchIcon} alt="Search" className="h-5 w-5" />
       </button>

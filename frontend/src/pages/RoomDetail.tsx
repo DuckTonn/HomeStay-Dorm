@@ -152,7 +152,7 @@ export const RoomDetailPage = () => {
           <div className="mt-auto flex justify-center">
             <button
               onClick={() => setIsBookingModalOpen(true)}
-              className="w-fit px-8 py-2.5 rounded-lg border border-secondary text-secondary be-vietnam-pro-medium hover:bg-secondary hover:text-white transition-all duration-300"
+              className="w-fit px-8 py-2.5 rounded-lg border border-secondary text-secondary be-vietnam-pro-medium hover:bg-secondary hover:text-white transition-all duration-300 hover:cursor-pointer"
             >
               Đặt lịch xem phòng
             </button>
