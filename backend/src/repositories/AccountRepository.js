@@ -30,7 +30,7 @@ class AccountRepository extends BaseRepository {
             .select(`
                 account_id, username, email, role, is_active, created_at,
                 employee:employee_id (employee_id, name, role, branch_id),
-                tenant:tenant_id (tenant_id, name, email, phone)
+                tenant:tenant_id (tenant_id, name, phone)
             `)
             .eq('username', username)
             .eq('is_active', true)

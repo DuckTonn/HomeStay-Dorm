@@ -144,7 +144,6 @@ class AuthService {
             const tenantRepository = require('../repositories/TenantRepository');
             const tenant = await tenantRepository.create({
                 name: email.split('@')[0], // Default name from email prefix
-                email: email,
                 nationality: 'Vietnam'
             });
             finalTenantId = tenant.tenant_id;
