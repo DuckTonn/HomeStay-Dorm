@@ -1,27 +1,68 @@
 const express = require('express');
 const router = express.Router();
-const controller = require('../controllers/CheckInController');
+const checkInBUS = require('../bus/CheckInBUS');
 const { validateDTO } = require('../middlewares/validateDTO');
+const { ContractResponse } = require('../dto/CheckInDTO');
+const BaseDTO = require('../dto/BaseDTO');
 const {
     CheckStayConditionsDTO,
     CreateContractDTO,
     SignContractDTO,
     CreateCheckInPaymentDTO,
     HandoverRoomDTO
-} = require('../dtos');
+} = require('../dto');
 
-router.get('/contract', (req, res, next) => controller.getAllContracts(req, res, next));
-router.get('/contract/:id', (req, res, next) => controller.getContractById(req, res, next));
-router.post('/contract', validateDTO(CreateContractDTO), (req, res, next) => controller.createContract(req, res, next));
-router.get('/check-deposit/:depositReceiptId', (req, res, next) => controller.checkDeposit(req, res, next));
+router.get('/contract', async (req, res, next) => {
+    try {
+        const result = await checkInBUS.getAllContracts(req.query);
+        const serialized = BaseDTO.serializeList(result, ContractResponse.serialize);
+        res.json({ success: true, ...serialized });
+    } catch (error) { next(error); }
+});
+router.get('/contract/:id', async (req, res, next) => {
+    try {
+        const data = await checkInBUS.getContractById(req.params.id);
+        res.json({ success: true, data: ContractResponse.serialize(data) });
+    } catch (error) { next(error); }
+});
+router.post('/contract', validateDTO(CreateContractDTO), async (req, res, next) => {
+    try {
+        const result = await checkInBUS.createContract(req.body);
+        res.status(201).json({ success: true, data: ContractResponse.serialize(result) });
+    } catch (error) { next(error); }
+});
+router.get('/check-deposit/:depositReceiptId', async (req, res, next) => {
+    try {
+        const result = await checkInBUS.checkDeposit(req.params.depositReceiptId);
+        res.json({ success: true, data: result });
+    } catch (error) { next(error); }
+});
 
+router.post('/check-condition', validateDTO(CheckStayConditionsDTO), async (req, res, next) => {
+    try {
+        const result = await checkInBUS.checkStayConditions(req.body);
+        res.json({ success: true, data: result });
+    } catch (error) { next(error); }
+});
+router.put('/contract/:contractId/sign', validateDTO(SignContractDTO), async (req, res, next) => {
+    try {
+        const result = await checkInBUS.signContract(req.params.contractId, req.body.document_proof);
+        res.json({ success: true, data: ContractResponse.serialize(result) });
+    } catch (error) { next(error); }
+});
 
-router.post('/check-condition', validateDTO(CheckStayConditionsDTO), (req, res, next) => controller.checkStayConditions(req, res, next));
-router.put('/contract/:contractId/sign', validateDTO(SignContractDTO), (req, res, next) => controller.signContract(req, res, next));
+router.post('/payment', validateDTO(CreateCheckInPaymentDTO), async (req, res, next) => {
+    try {
+        const result = await checkInBUS.createCheckInPayment(req.body);
+        res.status(201).json({ success: true, data: result });
+    } catch (error) { next(error); }
+});
 
-
-router.post('/payment', validateDTO(CreateCheckInPaymentDTO), (req, res, next) => controller.createCheckInPayment(req, res, next));
-
-router.post('/room-handover', validateDTO(HandoverRoomDTO), (req, res, next) => controller.handoverRoom(req, res, next));
+router.post('/room-handover', validateDTO(HandoverRoomDTO), async (req, res, next) => {
+    try {
+        const result = await checkInBUS.handoverRoom(req.body);
+        res.json({ success: true, data: result });
+    } catch (error) { next(error); }
+});
 
 module.exports = router;
