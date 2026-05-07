@@ -3,7 +3,7 @@ const router = express.Router();
 const roomBUS = require('../bus/RoomBUS');
 const { validateDTO } = require('../middlewares/validateDTO');
 const upload = require('../middlewares/upload');
-const { RoomDTO, BedDTO, RoomTypeDTO } = require('../dto');
+const { RoomDTO } = require('../dto');
 
 
 // Room types (static routes first)
@@ -13,13 +13,13 @@ router.get('/room-type/all', async (req, res, next) => {
         res.json({ success: true, ...result });
     } catch (error) { next(error); }
 });
-router.post('/room-type', validateDTO(RoomTypeDTO), async (req, res, next) => {
+router.post('/room-type', validateDTO(RoomDTO), async (req, res, next) => {
     try {
         const data = await roomBUS.createRoomType(req.body);
         res.status(201).json({ success: true, data });
     } catch (error) { next(error); }
 });
-router.put('/room-type/:id', validateDTO(RoomTypeDTO), async (req, res, next) => {
+router.put('/room-type/:id', validateDTO(RoomDTO), async (req, res, next) => {
     try {
         const data = await roomBUS.updateRoomType(req.params.id, req.body);
         res.json({ success: true, data });
@@ -46,13 +46,13 @@ router.get('/:roomId/available-bed', async (req, res, next) => {
         res.json({ success: true, ...result });
     } catch (error) { next(error); }
 });
-router.post('/bed', validateDTO(BedDTO), async (req, res, next) => {
+router.post('/bed', validateDTO(RoomDTO), async (req, res, next) => {
     try {
         const data = await roomBUS.createBed(req.body);
         res.status(201).json({ success: true, data });
     } catch (error) { next(error); }
 });
-router.put('/bed/:id', validateDTO(BedDTO), async (req, res, next) => {
+router.put('/bed/:id', validateDTO(RoomDTO), async (req, res, next) => {
     try {
         const data = await roomBUS.updateBed(req.params.id, req.body);
         res.json({ success: true, data });

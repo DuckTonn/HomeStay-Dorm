@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const registrationBUS = require('../bus/RegistrationBUS');
 const { validateDTO } = require('../middlewares/validateDTO');
-const { RegistrationDTO, AppointmentDTO, CriteriaDTO } = require('../dto');
+const { RegistrationDTO } = require('../dto');
 
 router.get('/request', async (req, res, next) => {
     try {
@@ -34,7 +34,7 @@ router.get('/appointment', async (req, res, next) => {
         res.json({ success: true, ...result });
     } catch (error) { next(error); }
 });
-router.post('/appointment', validateDTO(AppointmentDTO), async (req, res, next) => {
+router.post('/appointment', validateDTO(RegistrationDTO), async (req, res, next) => {
     try {
         const result = await registrationBUS.createAppointment(req.body);
         res.status(201).json({ success: true, data: result });
@@ -52,7 +52,7 @@ router.get('/criteria', async (req, res, next) => {
         res.json({ success: true, ...result });
     } catch (error) { next(error); }
 });
-router.post('/criteria', validateDTO(CriteriaDTO), async (req, res, next) => {
+router.post('/criteria', validateDTO(RegistrationDTO), async (req, res, next) => {
     try {
         const data = await registrationBUS.createCriteria(req.body);
         res.status(201).json({ success: true, data });

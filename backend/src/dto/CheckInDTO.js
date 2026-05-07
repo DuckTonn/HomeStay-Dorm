@@ -1,21 +1,13 @@
 const BaseDTO = require('./BaseDTO');
 
-// ─── Check Stay Conditions ──────────────────────────────────
-class CheckStayConditionsDTO extends BaseDTO {
+class CheckInDTO extends BaseDTO {
     constructor(data) {
         super(data, [
+            // Check Stay Conditions
             { field: 'deposit_receipt_id', required: false, type: 'integer' },
-            { field: 'members', required: false, type: 'array' }
-        ]);
-        Object.assign(this, data);
-    }
-}
-
-// ─── Contract ────────────────────────────────────────────────
-class ContractDTO extends BaseDTO {
-    constructor(data) {
-        super(data, [
-            { field: 'deposit_receipt_id', required: false, type: 'integer' },
+            { field: 'members', required: false, type: 'array' },
+            
+            // Contract
             { field: 'tenant_id', required: false, type: 'integer' },
             { field: 'room_id', required: false, type: 'integer' },
             { field: 'rental_type', required: false, type: 'string', enum: ['Whole Room', 'Shared Room'] },
@@ -23,7 +15,18 @@ class ContractDTO extends BaseDTO {
             { field: 'end_date', required: false, type: 'date' },
             { field: 'employee_id', required: false, type: 'integer' },
             { field: 'bed_ids', required: false, type: 'array' },
-            { field: 'service_ids', required: false, type: 'array' }
+            { field: 'service_ids', required: false, type: 'array' },
+            
+            // Sign Contract
+            { field: 'document_proof', required: false, type: 'string' },
+            
+            // CheckInPayment
+            { field: 'contract_id', required: false, type: 'integer' },
+            { field: 'amount', required: false, type: 'number', min: 0 },
+            { field: 'method', required: false, type: 'string', enum: ['Cash', 'Bank Transfer'] },
+            
+            // Handover Room
+            { field: 'note', required: false, type: 'string' }
         ]);
         Object.assign(this, data);
     }
@@ -48,45 +51,6 @@ class ContractDTO extends BaseDTO {
     }
 }
 
-// ─── Sign Contract ──────────────────────────────────────────
-class SignContractDTO extends BaseDTO {
-    constructor(data) {
-        super(data, [
-            { field: 'document_proof', required: false, type: 'string' }
-        ]);
-        Object.assign(this, data);
-    }
-}
-
-// ─── Check-In Payment ───────────────────────────────────────
-class CheckInPaymentDTO extends BaseDTO {
-    constructor(data) {
-        super(data, [
-            { field: 'contract_id', required: false, type: 'integer' },
-            { field: 'amount', required: false, type: 'number', min: 0 },
-            { field: 'method', required: false, type: 'string', enum: ['Cash', 'Bank Transfer'] },
-            { field: 'tenant_id', required: false, type: 'integer' },
-            { field: 'note', required: false, type: 'string' }
-        ]);
-        Object.assign(this, data);
-    }
-}
-
-// ─── Room Handover ──────────────────────────────────────────
-class HandoverRoomDTO extends BaseDTO {
-    constructor(data) {
-        super(data, [
-            { field: 'contract_id', required: false, type: 'integer' },
-            { field: 'note', required: false, type: 'string' }
-        ]);
-        Object.assign(this, data);
-    }
-}
-
 module.exports = {
-    CheckStayConditionsDTO,
-    ContractDTO,
-    SignContractDTO,
-    CheckInPaymentDTO,
-    HandoverRoomDTO
+    CheckInDTO
 };

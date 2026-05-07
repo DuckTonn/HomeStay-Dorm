@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const depositBUS = require('../bus/DepositBUS');
 const { validateDTO } = require('../middlewares/validateDTO');
-const { CheckDepositAbilityDTO, DepositReceiptDTO, DepositPaymentDTO, ConfirmDepositPaymentDTO } = require('../dto');
+const { DepositDTO } = require('../dto');
 
 
 router.get('/', async (req, res, next) => {
@@ -17,26 +17,26 @@ router.get('/:receiptId', async (req, res, next) => {
         res.json({ success: true, data });
     } catch (error) { next(error); }
 });
-router.post('/', validateDTO(DepositReceiptDTO), async (req, res, next) => {
+router.post('/', validateDTO(DepositDTO), async (req, res, next) => {
     try {
         const result = await depositBUS.createDepositReceipt(req.body);
         res.status(201).json({ success: true, data: result });
     } catch (error) { next(error); }
 });
-router.post('/check-ability', validateDTO(CheckDepositAbilityDTO), async (req, res, next) => {
+router.post('/check-ability', validateDTO(DepositDTO), async (req, res, next) => {
     try {
         const result = await depositBUS.checkDepositAbility(req.body.bed_ids);
         res.json({ success: true, data: result });
     } catch (error) { next(error); }
 });
 
-router.post('/:receiptId/payment', validateDTO(DepositPaymentDTO), async (req, res, next) => {
+router.post('/:receiptId/payment', validateDTO(DepositDTO), async (req, res, next) => {
     try {
         const result = await depositBUS.createDepositPayment(req.params.receiptId, req.body.method);
         res.status(201).json({ success: true, data: result });
     } catch (error) { next(error); }
 });
-router.put('/:receiptId/confirm-payment', validateDTO(ConfirmDepositPaymentDTO), async (req, res, next) => {
+router.put('/:receiptId/confirm-payment', validateDTO(DepositDTO), async (req, res, next) => {
     try {
         const result = await depositBUS.confirmDepositPayment(req.params.receiptId, req.body.payment_id);
         res.json({ success: true, data: result });

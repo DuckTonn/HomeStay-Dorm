@@ -1,49 +1,34 @@
 // ─── Branch DTOs ─────────────────────────────────────────────
-const { BranchDTO, RegulationDTO, ServiceDTO } = require('./BranchDTO');
+const { BranchDTO } = require('./BranchDTO');
 
 // ─── Room DTOs ───────────────────────────────────────────────
-const { RoomDTO, BedDTO, RoomTypeDTO } = require('./RoomDTO');
+const { RoomDTO } = require('./RoomDTO');
 
 // ─── Employee DTOs ───────────────────────────────────────────
 const { EmployeeDTO } = require('./EmployeeDTO');
 
 // ─── Registration DTOs ──────────────────────────────────────
-const { TenantDTO, RegistrationRequestDTO, RegistrationDTO, AppointmentDTO, CriteriaDTO } = require('./RegistrationDTO');
+const { RegistrationDTO } = require('./RegistrationDTO');
 
 // ─── Deposit DTOs ───────────────────────────────────────────
-const { CheckDepositAbilityDTO, DepositReceiptDTO, DepositPaymentDTO, ConfirmDepositPaymentDTO } = require('./DepositDTO');
+const { DepositDTO } = require('./DepositDTO');
 
 // ─── Check-In DTOs ──────────────────────────────────────────
-const { CheckStayConditionsDTO, ContractDTO, SignContractDTO, CheckInPaymentDTO, HandoverRoomDTO } = require('./CheckInDTO');
+const { CheckInDTO } = require('./CheckInDTO');
 
 // ─── Check-Out DTOs ─────────────────────────────────────────
-const { CalculateRefundDTO, ConfirmCheckOutDTO, CompleteCheckOutDTO, CheckOutWithoutContractDTO } = require('./CheckOutDTO');
+const { CheckOutDTO } = require('./CheckOutDTO');
 
 // ─── Payment DTOs ───────────────────────────────────────────
 const { PaymentDTO } = require('./PaymentDTO');
 
 module.exports = {
-    // Branch
-    BranchDTO, RegulationDTO, ServiceDTO,
-
-    // Room
-    RoomDTO, BedDTO, RoomTypeDTO,
-
-    // Employee
+    BranchDTO,
+    RoomDTO,
     EmployeeDTO,
-
-    // Registration
-    TenantDTO, RegistrationRequestDTO, RegistrationDTO, AppointmentDTO, CriteriaDTO,
-
-    // Deposit
-    CheckDepositAbilityDTO, DepositReceiptDTO, DepositPaymentDTO, ConfirmDepositPaymentDTO,
-
-    // Check-In
-    CheckStayConditionsDTO, ContractDTO, SignContractDTO, CheckInPaymentDTO, HandoverRoomDTO,
-
-    // Check-Out
-    CalculateRefundDTO, ConfirmCheckOutDTO, CompleteCheckOutDTO, CheckOutWithoutContractDTO,
-
-    // Payment
+    RegistrationDTO,
+    DepositDTO,
+    CheckInDTO,
+    CheckOutDTO,
     PaymentDTO
 };
