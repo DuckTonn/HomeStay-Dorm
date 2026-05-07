@@ -38,13 +38,50 @@ class RoomBUS {
         };
 
 
-        return roomDAO.findAvailable(normalizedFilters);
+        const result = await roomDAO.findAvailable(normalizedFilters);
+        if (result.data) {
+            result.data = result.data.map(room => this._formatRoom(room));
+        }
+        return result;
+    }
+
+    _formatRoom(room) {
+        if (!room) return null;
+        const formatted = { ...room };
+
+        // Handle beds (rename from 'bed' and ensure price is number)
+        if (room.bed) {
+            formatted.beds = room.bed.map(b => ({
+                ...b,
+                price: Number(b.price || 0)
+            }));
+            delete formatted.bed;
+        } else {
+            formatted.beds = room.beds || [];
+        }
+
+        // Handle room_type (ensure it's an object)
+        if (!formatted.room_type) {
+            formatted.room_type = { room_type_id: room.room_type_id || 0, name: 'Phòng' };
+        }
+
+        // Handle branch (ensure it's an object)
+        if (!formatted.branch) {
+            formatted.branch = { branch_id: room.branch_id || 0, address: '', phone_number: '', email: '' };
+        }
+
+        // Handle room_images (ensure it's an array)
+        if (!formatted.room_images) {
+            formatted.room_images = [];
+        }
+
+        return formatted;
     }
 
     async getRoomById(roomId) {
         const room = await roomDAO.findById(roomId);
         if (!room) throw Object.assign(new Error('Room not found'), { type: 'business' });
-        return room;
+        return this._formatRoom(room);
     }
 
     async createRoom(data) {
@@ -193,7 +230,8 @@ class RoomBUS {
         const minPrice = referencePrice - 1000;
         const maxPrice = referencePrice + 1000;
 
-        return roomDAO.findSimilar(roomId, roomTypeId, minPrice, maxPrice);
+        const rooms = await roomDAO.findSimilar(roomId, roomTypeId, minPrice, maxPrice);
+        return rooms.map(r => this._formatRoom(r));
     }
 }
 

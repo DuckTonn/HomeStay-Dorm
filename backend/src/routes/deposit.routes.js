@@ -2,30 +2,22 @@ const express = require('express');
 const router = express.Router();
 const depositBUS = require('../bus/DepositBUS');
 const { validateDTO } = require('../middlewares/validateDTO');
-const { DepositReceiptResponse } = require('../dto/DepositDTO');
-const BaseDTO = require('../dto/BaseDTO');
-const {
-    CheckDepositAbilityDTO,
-    CreateDepositReceiptDTO,
-    CreateDepositPaymentDTO,
-    ConfirmDepositPaymentDTO
-} = require('../dto');
+const { CheckDepositAbilityDTO, DepositReceiptDTO, DepositPaymentDTO, ConfirmDepositPaymentDTO } = require('../dto');
 
 
 router.get('/', async (req, res, next) => {
     try {
         const result = await depositBUS.getAllDepositReceipts(req.query);
-        const serialized = BaseDTO.serializeList(result, DepositReceiptResponse.serialize);
-        res.json({ success: true, ...serialized });
+        res.json({ success: true, ...result });
     } catch (error) { next(error); }
 });
 router.get('/:receiptId', async (req, res, next) => {
     try {
         const data = await depositBUS.getDepositReceiptById(req.params.receiptId);
-        res.json({ success: true, data: DepositReceiptResponse.serialize(data) });
+        res.json({ success: true, data });
     } catch (error) { next(error); }
 });
-router.post('/', validateDTO(CreateDepositReceiptDTO), async (req, res, next) => {
+router.post('/', validateDTO(DepositReceiptDTO), async (req, res, next) => {
     try {
         const result = await depositBUS.createDepositReceipt(req.body);
         res.status(201).json({ success: true, data: result });
@@ -38,7 +30,7 @@ router.post('/check-ability', validateDTO(CheckDepositAbilityDTO), async (req, r
     } catch (error) { next(error); }
 });
 
-router.post('/:receiptId/payment', validateDTO(CreateDepositPaymentDTO), async (req, res, next) => {
+router.post('/:receiptId/payment', validateDTO(DepositPaymentDTO), async (req, res, next) => {
     try {
         const result = await depositBUS.createDepositPayment(req.params.receiptId, req.body.method);
         res.status(201).json({ success: true, data: result });

@@ -1,23 +1,7 @@
 const BaseDTO = require('./BaseDTO');
 
-class CreateRoomDTO extends BaseDTO {
-    constructor(data) {
-        super(data, [
-            { field: 'gender_policy', required: true, type: 'string', enum: ['Male', 'Female', 'Mixed'] },
-            { field: 'total_beds', required: true, type: 'integer', min: 0 },
-            { field: 'available_beds', required: false, type: 'integer', min: 0 },
-            { field: 'status', required: false, type: 'string' },
-            { field: 'area', required: false, type: 'string', maxLength: 100 },
-            { field: 'room_type_id', required: true, type: 'integer' },
-            { field: 'branch_id', required: true, type: 'integer' },
-            { field: 'room_description', required: false, type: 'string' },
-            { field: 'bed_price', required: false, type: 'number', min: 0 }
-        ]);
-        Object.assign(this, data);
-    }
-}
-
-class UpdateRoomDTO extends BaseDTO {
+// ─── Room ────────────────────────────────────────────────────
+class RoomDTO extends BaseDTO {
     constructor(data) {
         super(data, [
             { field: 'gender_policy', required: false, type: 'string', enum: ['Male', 'Female', 'Mixed'] },
@@ -35,112 +19,29 @@ class UpdateRoomDTO extends BaseDTO {
 }
 
 // ─── Bed ─────────────────────────────────────────────────────
-class CreateBedDTO extends BaseDTO {
-    constructor(data) {
-        super(data, [
-            { field: 'price', required: true, type: 'number', min: 0 },
-            { field: 'room_id', required: true, type: 'integer' },
-            { field: 'status', required: false, type: 'string', enum: ['Empty', 'Reserved', 'Deposited', 'Occupied'] }
-        ]);
-        this.price = data.price;
-        this.room_id = data.room_id;
-        this.status = data.status;
-    }
-}
-
-class UpdateBedDTO extends BaseDTO {
+class BedDTO extends BaseDTO {
     constructor(data) {
         super(data, [
             { field: 'price', required: false, type: 'number', min: 0 },
             { field: 'room_id', required: false, type: 'integer' },
             { field: 'status', required: false, type: 'string', enum: ['Empty', 'Reserved', 'Deposited', 'Occupied'] }
         ]);
-        this.price = data.price;
-        this.room_id = data.room_id;
-        this.status = data.status;
+        Object.assign(this, data);
     }
 }
 
 // ─── Room Type ───────────────────────────────────────────────
-class CreateRoomTypeDTO extends BaseDTO {
-    constructor(data) {
-        super(data, [
-            { field: 'name', required: true, type: 'string', maxLength: 100 }
-        ]);
-        this.name = data.name;
-    }
-}
-
-class UpdateRoomTypeDTO extends BaseDTO {
+class RoomTypeDTO extends BaseDTO {
     constructor(data) {
         super(data, [
             { field: 'name', required: false, type: 'string', maxLength: 100 }
         ]);
-        this.name = data.name;
-    }
-}
-
-// ─── Response Serializers ────────────────────────────────────
-class RoomTypeResponse {
-    static serialize(roomType) {
-        if (!roomType) return null;
-        return {
-            room_type_id: roomType.room_type_id,
-            name: roomType.name
-        };
-    }
-}
-
-class BedResponse {
-    static serialize(bed) {
-        if (!bed) return null;
-        let tenant_phone = null;
-        if (Array.isArray(bed.contract_bed) && bed.contract_bed.length > 0) {
-            // Find the most recent or active contract
-            const contract = bed.contract_bed[0]?.contract;
-            if (contract && contract.tenant) {
-                tenant_phone = contract.tenant.phone;
-            }
-        }
-
-        return {
-            bed_id: bed.bed_id,
-            status: bed.status,
-            price: Number(bed.price || 0),
-            tenant_phone: tenant_phone
-        };
-    }
-}
-
-class RoomResponse {
-    static serialize(room) {
-        if (!room) return null;
-        return {
-            room_id: room.room_id,
-            status: room.status,
-            gender_policy: room.gender_policy,
-            area: room.area ?? null,
-            total_beds: room.total_beds,
-            available_beds: room.available_beds,
-            room_description: room.room_description ?? null,
-            room_number: room.room_number,
-            room_type: room.room_type ? RoomTypeResponse.serialize(room.room_type) : null,
-            branch_id: room.branch_id ?? null,
-            room_images: room?.room_images ? room.room_images : [],
-            branch: room.branch ? { branch_id: room.branch.branch_id, address: room.branch.address, phone_number: room.branch.phone_number, email: room.branch.email } : null,
-            beds: Array.isArray(room.bed) ? room.bed.map(BedResponse.serialize) : []
-        };
+        Object.assign(this, data);
     }
 }
 
 module.exports = {
-    CreateRoomDTO,
-    UpdateRoomDTO,
-    CreateBedDTO,
-    UpdateBedDTO,
-    CreateRoomTypeDTO,
-    UpdateRoomTypeDTO,
-    RoomResponse,
-    BedResponse,
-    RoomTypeResponse
+    RoomDTO,
+    BedDTO,
+    RoomTypeDTO
 };

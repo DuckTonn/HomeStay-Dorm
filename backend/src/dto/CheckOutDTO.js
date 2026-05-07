@@ -4,7 +4,7 @@ const BaseDTO = require('./BaseDTO');
 class CalculateRefundDTO extends BaseDTO {
     constructor(data) {
         super(data, [
-            { field: 'contract_id', required: true, type: 'integer' },
+            { field: 'contract_id', required: false, type: 'integer' },
             { field: 'check_out_date', required: false, type: 'date' },
             { field: 'extra_costs', required: false, type: 'object' }
         ]);
@@ -16,10 +16,10 @@ class CalculateRefundDTO extends BaseDTO {
 class ConfirmCheckOutDTO extends BaseDTO {
     constructor(data) {
         super(data, [
-            { field: 'contract_id', required: true, type: 'integer' },
+            { field: 'contract_id', required: false, type: 'integer' },
             { field: 'check_out_date', required: false, type: 'date' },
             { field: 'extra_costs', required: false, type: 'object' },
-            { field: 'accountant_id', required: true, type: 'integer' },
+            { field: 'accountant_id', required: false, type: 'integer' },
             { field: 'record_note', required: false, type: 'string' }
         ]);
         Object.assign(this, data);
@@ -30,11 +30,10 @@ class ConfirmCheckOutDTO extends BaseDTO {
 class CompleteCheckOutDTO extends BaseDTO {
     constructor(data) {
         super(data, [
-            { field: 'contract_id', required: true, type: 'integer' },
-            { field: 'refund_receipt_id', required: true, type: 'integer' }
+            { field: 'contract_id', required: false, type: 'integer' },
+            { field: 'refund_receipt_id', required: false, type: 'integer' }
         ]);
-        this.contract_id = data.contract_id;
-        this.refund_receipt_id = data.refund_receipt_id;
+        Object.assign(this, data);
     }
 }
 
@@ -42,11 +41,10 @@ class CompleteCheckOutDTO extends BaseDTO {
 class CheckOutWithoutContractDTO extends BaseDTO {
     constructor(data) {
         super(data, [
-            { field: 'deposit_receipt_id', required: true, type: 'integer' },
-            { field: 'accountant_id', required: true, type: 'integer' }
+            { field: 'deposit_receipt_id', required: false, type: 'integer' },
+            { field: 'accountant_id', required: false, type: 'integer' }
         ]);
-        this.deposit_receipt_id = data.deposit_receipt_id;
-        this.accountant_id = data.accountant_id;
+        Object.assign(this, data);
     }
 }
 

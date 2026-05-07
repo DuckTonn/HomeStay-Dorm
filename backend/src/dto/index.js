@@ -1,141 +1,49 @@
 // ─── Branch DTOs ─────────────────────────────────────────────
-const {
-    CreateBranchDTO,
-    UpdateBranchDTO,
-    CreateRegulationDTO,
-    UpdateRegulationDTO,
-    CreateServiceDTO,
-    UpdateServiceDTO,
-    BranchResponse,
-    RegulationResponse,
-    ServiceResponse
-} = require('./BranchDTO');
+const { BranchDTO, RegulationDTO, ServiceDTO } = require('./BranchDTO');
 
 // ─── Room DTOs ───────────────────────────────────────────────
-const {
-    CreateRoomDTO,
-    UpdateRoomDTO,
-    CreateBedDTO,
-    UpdateBedDTO,
-    CreateRoomTypeDTO,
-    UpdateRoomTypeDTO,
-    RoomResponse,
-    BedResponse,
-    RoomTypeResponse
-} = require('./RoomDTO');
+const { RoomDTO, BedDTO, RoomTypeDTO } = require('./RoomDTO');
 
 // ─── Employee DTOs ───────────────────────────────────────────
-const {
-    CreateEmployeeDTO,
-    UpdateEmployeeDTO,
-    EmployeeResponse
-} = require('./EmployeeDTO');
+const { EmployeeDTO } = require('./EmployeeDTO');
 
 // ─── Registration DTOs ──────────────────────────────────────
-const {
-    TenantDTO,
-    RegistrationRequestDTO,
-    CreateRegistrationDTO,
-    CreateAppointmentDTO,
-    CreateCriteriaDTO,
-    RegistrationRequestResponse,
-    AppointmentResponse
-} = require('./RegistrationDTO');
+const { TenantDTO, RegistrationRequestDTO, RegistrationDTO, AppointmentDTO, CriteriaDTO } = require('./RegistrationDTO');
 
 // ─── Deposit DTOs ───────────────────────────────────────────
-const {
-    CheckDepositAbilityDTO,
-    CreateDepositReceiptDTO,
-    CreateDepositPaymentDTO,
-    ConfirmDepositPaymentDTO,
-    DepositReceiptResponse
-} = require('./DepositDTO');
+const { CheckDepositAbilityDTO, DepositReceiptDTO, DepositPaymentDTO, ConfirmDepositPaymentDTO } = require('./DepositDTO');
 
 // ─── Check-In DTOs ──────────────────────────────────────────
-const {
-    CheckStayConditionsDTO,
-    CreateContractDTO,
-    SignContractDTO,
-    CreateCheckInPaymentDTO,
-    HandoverRoomDTO,
-    ContractResponse
-} = require('./CheckInDTO');
+const { CheckStayConditionsDTO, ContractDTO, SignContractDTO, CheckInPaymentDTO, HandoverRoomDTO } = require('./CheckInDTO');
 
 // ─── Check-Out DTOs ─────────────────────────────────────────
-const {
-    CalculateRefundDTO,
-    ConfirmCheckOutDTO,
-    CompleteCheckOutDTO,
-    CheckOutWithoutContractDTO
-} = require('./CheckOutDTO');
+const { CalculateRefundDTO, ConfirmCheckOutDTO, CompleteCheckOutDTO, CheckOutWithoutContractDTO } = require('./CheckOutDTO');
 
 // ─── Payment DTOs ───────────────────────────────────────────
-const {
-    CreatePaymentDTO,
-    UpdatePaymentDTO,
-    PaymentResponse
-} = require('./PaymentDTO');
+const { PaymentDTO } = require('./PaymentDTO');
 
 module.exports = {
     // Branch
-    CreateBranchDTO,
-    UpdateBranchDTO,
-    CreateRegulationDTO,
-    UpdateRegulationDTO,
-    CreateServiceDTO,
-    UpdateServiceDTO,
-    BranchResponse,
-    RegulationResponse,
-    ServiceResponse,
+    BranchDTO, RegulationDTO, ServiceDTO,
 
     // Room
-    CreateRoomDTO,
-    UpdateRoomDTO,
-    CreateBedDTO,
-    UpdateBedDTO,
-    CreateRoomTypeDTO,
-    UpdateRoomTypeDTO,
-    RoomResponse,
-    BedResponse,
-    RoomTypeResponse,
+    RoomDTO, BedDTO, RoomTypeDTO,
 
     // Employee
-    CreateEmployeeDTO,
-    UpdateEmployeeDTO,
-    EmployeeResponse,
+    EmployeeDTO,
 
     // Registration
-    TenantDTO,
-    RegistrationRequestDTO,
-    CreateRegistrationDTO,
-    CreateAppointmentDTO,
-    CreateCriteriaDTO,
-    RegistrationRequestResponse,
-    AppointmentResponse,
+    TenantDTO, RegistrationRequestDTO, RegistrationDTO, AppointmentDTO, CriteriaDTO,
 
     // Deposit
-    CheckDepositAbilityDTO,
-    CreateDepositReceiptDTO,
-    CreateDepositPaymentDTO,
-    ConfirmDepositPaymentDTO,
-    DepositReceiptResponse,
+    CheckDepositAbilityDTO, DepositReceiptDTO, DepositPaymentDTO, ConfirmDepositPaymentDTO,
 
     // Check-In
-    CheckStayConditionsDTO,
-    CreateContractDTO,
-    SignContractDTO,
-    CreateCheckInPaymentDTO,
-    HandoverRoomDTO,
-    ContractResponse,
+    CheckStayConditionsDTO, ContractDTO, SignContractDTO, CheckInPaymentDTO, HandoverRoomDTO,
 
     // Check-Out
-    CalculateRefundDTO,
-    ConfirmCheckOutDTO,
-    CompleteCheckOutDTO,
-    CheckOutWithoutContractDTO,
+    CalculateRefundDTO, ConfirmCheckOutDTO, CompleteCheckOutDTO, CheckOutWithoutContractDTO,
 
     // Payment
-    CreatePaymentDTO,
-    UpdatePaymentDTO,
-    PaymentResponse
+    PaymentDTO
 };

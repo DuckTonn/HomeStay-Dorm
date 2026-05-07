@@ -1,5 +1,6 @@
 const BaseDTO = require('./BaseDTO');
 
+// ─── Tenant ──────────────────────────────────────────────────
 class TenantDTO extends BaseDTO {
     constructor(data) {
         super(data, [
@@ -14,16 +15,17 @@ class TenantDTO extends BaseDTO {
     }
 }
 
+// ─── Registration Request ────────────────────────────────────
 class RegistrationRequestDTO extends BaseDTO {
     constructor(data) {
         super(data, [
-            { field: 'gender_policy', required: true, type: 'string', enum: ['Male', 'Female', 'Mixed'] },
+            { field: 'gender_policy', required: false, type: 'string', enum: ['Male', 'Female', 'Mixed'] },
             { field: 'area', required: false, type: 'string', maxLength: 100 },
             { field: 'room_type_id', required: false, type: 'integer' },
             { field: 'price_level', required: false, type: 'number', min: 0 },
-            { field: 'expected_date', required: true, type: 'date' },
+            { field: 'expected_date', required: false, type: 'date' },
             { field: 'duration', required: false, type: 'string', maxLength: 100 },
-            { field: 'rental_type', required: true, type: 'string', enum: ['Whole Room', 'Shared Room'] },
+            { field: 'rental_type', required: false, type: 'string', enum: ['Whole Room', 'Shared Room'] },
             { field: 'sales_employee_id', required: false, type: 'integer' },
             { field: 'number_of_people', required: false, type: 'integer', min: 1 }
         ]);
@@ -31,11 +33,12 @@ class RegistrationRequestDTO extends BaseDTO {
     }
 }
 
-class CreateRegistrationDTO extends BaseDTO {
+// ─── Registration (composite) ────────────────────────────────
+class RegistrationDTO extends BaseDTO {
     constructor(data) {
         super(data, [
-            { field: 'tenant', required: true, type: 'object' },
-            { field: 'request', required: true, type: 'object' },
+            { field: 'tenant', required: false, type: 'object' },
+            { field: 'request', required: false, type: 'object' },
             { field: 'tenant_group', required: false, type: 'object' },
             { field: 'criteria', required: false, type: 'array' }
         ]);
@@ -80,11 +83,11 @@ class CreateRegistrationDTO extends BaseDTO {
 }
 
 // ─── Viewing Appointment ────────────────────────────────────
-class CreateAppointmentDTO extends BaseDTO {
+class AppointmentDTO extends BaseDTO {
     constructor(data) {
         super(data, [
-            { field: 'registration_request_id', required: true, type: 'integer' },
-            { field: 'appointment_time', required: true, type: 'date' },
+            { field: 'registration_request_id', required: false, type: 'integer' },
+            { field: 'appointment_time', required: false, type: 'date' },
             { field: 'appointment_type', required: false, type: 'string' }
         ]);
         Object.assign(this, data);
@@ -92,58 +95,19 @@ class CreateAppointmentDTO extends BaseDTO {
 }
 
 // ─── Rental Criteria ────────────────────────────────────────
-class CreateCriteriaDTO extends BaseDTO {
+class CriteriaDTO extends BaseDTO {
     constructor(data) {
         super(data, [
-            { field: 'name', required: true, type: 'string', maxLength: 200 }
+            { field: 'name', required: false, type: 'string', maxLength: 200 }
         ]);
-        this.name = data.name;
-    }
-}
-
-// ─── Response Serializers ────────────────────────────────────
-class RegistrationRequestResponse {
-    static serialize(request) {
-        if (!request) return null;
-        return {
-            registration_request_id: request.registration_request_id,
-            status: request.status,
-            gender_policy: request.gender_policy,
-            area: request.area ?? null,
-            room_type_id: request.room_type_id ?? null,
-            price_level: request.price_level ?? null,
-            expected_date: request.expected_date,
-            duration: request.duration ?? null,
-            rental_type: request.rental_type,
-            number_of_people: request.number_of_people ?? 1,
-            tenant_id: request.tenant_id,
-            sales_employee_id: request.sales_employee_id
-        };
-    }
-}
-
-class AppointmentResponse {
-    static serialize(appointment) {
-        if (!appointment) return null;
-        return {
-            appointment_id: appointment.appointment_id,
-            appointment_time: appointment.appointment_time,
-            appointment_type: appointment.appointment_type,
-            status: appointment.status,
-            confirmation_status: appointment.confirmation_status,
-            registration_request_id: appointment.registration_request_id,
-            room_id: appointment.room_id,
-            sales_employee_id: appointment.sales_employee_id
-        };
+        Object.assign(this, data);
     }
 }
 
 module.exports = {
     TenantDTO,
     RegistrationRequestDTO,
-    CreateRegistrationDTO,
-    CreateAppointmentDTO,
-    CreateCriteriaDTO,
-    RegistrationRequestResponse,
-    AppointmentResponse
+    RegistrationDTO,
+    AppointmentDTO,
+    CriteriaDTO
 };

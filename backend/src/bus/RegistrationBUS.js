@@ -2,7 +2,7 @@ const tenantDAO = require('../dao/TenantDAO');
 const tenantGroupDAO = require('../dao/TenantGroupDAO');
 const registrationRequestDAO = require('../dao/RegistrationRequestDAO');
 const viewingAppointmentDAO = require('../dao/ViewingAppointmentDAO');
-const roomDAO = require('../dao/RoomDAO');
+const roomBUS = require('./RoomBUS');
 const rentalCriteriaDAO = require('../dao/RentalCriteriaDAO');
 const supabase = require('../config/supabase');
 const { createBusinessError } = require('../middlewares/validator');
@@ -69,14 +69,14 @@ class RegistrationBUS {
         const request = await registrationRequestDAO.findById(requestId);
         if (!request) throw createBusinessError('Registration request not found');
 
-        const availableRoomsResult = await roomDAO.findAvailable({
+        const availableRoomsResult = await roomBUS.getAllRooms({
             area: request.area,
             gender_policy: request.gender_policy,
             room_type_id: request.room_type_id,
             price_level: request.price_level
         });
 
-        const availableRooms = availableRoomsResult.data ?? availableRoomsResult;
+        const availableRooms = availableRoomsResult.data;
 
         return {
             request,
