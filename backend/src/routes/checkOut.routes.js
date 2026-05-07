@@ -7,13 +7,6 @@ const { CheckOutDTO } = require('../dto');
 router.get('/contract/:contractId', async (req, res, next) => {
     try {
         const result = await checkOutBUS.registerCheckOut(req.params.contractId);
-        res.json({ success: true, ...(result?.pagination ? { data: result.data, pagination: result.pagination } : { data: result }) });
-    } catch (error) { next(error); }
-});
-
-router.post('/calculate-refund', validateDTO(CheckOutDTO), async (req, res, next) => {
-    try {
-        const result = await checkOutBUS.calculateRefund(req.body);
         res.json({ success: true, data: result });
     } catch (error) { next(error); }
 });
@@ -28,13 +21,6 @@ router.post('/confirm', validateDTO(CheckOutDTO), async (req, res, next) => {
 router.put('/complete', validateDTO(CheckOutDTO), async (req, res, next) => {
     try {
         const result = await checkOutBUS.completeCheckOut(req.body);
-        res.json({ success: true, data: result });
-    } catch (error) { next(error); }
-});
-
-router.post('/without-contract', validateDTO(CheckOutDTO), async (req, res, next) => {
-    try {
-        const result = await checkOutBUS.checkOutWithoutContract(req.body);
         res.json({ success: true, data: result });
     } catch (error) { next(error); }
 });
