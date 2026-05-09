@@ -143,17 +143,6 @@ class RoomBUS {
         return roomDAO.delete(roomId);
     }
 
-    // --- Tenants in a room ---
-    async getRoomTenants(roomId) {
-        const contractDAO = require('../dao/ContractDAO');
-        return contractDAO.findTenantsByRoom(roomId);
-    }
-
-    async removeTenantFromRoom(roomId, tenantId) {
-        const contractDAO = require('../dao/ContractDAO');
-        return contractDAO.removeTenantFromRoom(roomId, tenantId);
-    }
-
     // --- Beds ---
     async getBedsByRoom(roomId) {
         return bedDAO.findAll({ room_id: roomId });

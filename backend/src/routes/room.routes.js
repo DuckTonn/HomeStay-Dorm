@@ -73,19 +73,6 @@ router.get('/', async (req, res, next) => {
         res.json({ success: true, ...result });
     } catch (error) { next(error); }
 });
-router.get('/:id/tenants', async (req, res, next) => {
-    try {
-        const tenants = await roomBUS.getRoomTenants(req.params.id);
-        res.json({ success: true, data: tenants });
-    } catch (error) { next(error); }
-});
-router.delete('/:id/tenants/:tenantId', async (req, res, next) => {
-    try {
-        const { id, tenantId } = req.params;
-        await roomBUS.removeTenantFromRoom(id, tenantId);
-        res.json({ success: true, message: 'Đã xóa người thuê khỏi phòng' });
-    } catch (error) { next(error); }
-});
 router.get('/:id/similar', async (req, res, next) => {
     try {
         const data = await roomBUS.getSimilarRooms(req.params.id);
