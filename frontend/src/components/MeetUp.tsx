@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const API = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
 
@@ -74,9 +75,10 @@ const MeetUp = ({ appointment, onDeleted, onUpdated }: MeetUpProps) => {
         try {
             setDeleting(true);
             await axios.delete(`${API}/appointment/${appointment_id}`);
+            toast.success("Đã hủy lịch hẹn thành công!");
             onDeleted(appointment_id);
         } catch {
-            alert("Không thể hủy lịch hẹn. Vui lòng thử lại.");
+            toast.error("Không thể hủy lịch hẹn. Vui lòng thử lại.");
         } finally {
             setDeleting(false);
         }
@@ -90,9 +92,10 @@ const MeetUp = ({ appointment, onDeleted, onUpdated }: MeetUpProps) => {
             });
             // Re-fetch merged data by crafting updated object
             onUpdated({ ...appointment, appointment_time: new Date(editTime).toISOString() });
+            toast.success("Đã lưu thay đổi thành công!");
             setIsEditing(false);
         } catch {
-            alert("Không thể lưu thay đổi. Vui lòng thử lại.");
+            toast.error("Không thể lưu thay đổi. Vui lòng thử lại.");
         } finally {
             setSaving(false);
         }
@@ -159,7 +162,7 @@ const MeetUp = ({ appointment, onDeleted, onUpdated }: MeetUpProps) => {
                     /* ── VIEW MODE ── */
                     <>
                         <div className="flex items-center gap-2 flex-wrap">
-                            <h2 className="text-size-large be-vietnam-pro-medium">
+                            <h2 className="text-size-base be-vietnam-pro-medium">
                                 {timeStr} – {dateStr}
                             </h2>
                             <span className={`text-size-small border rounded-full px-2 py-0.5 ${colorClass}`}>
@@ -167,7 +170,7 @@ const MeetUp = ({ appointment, onDeleted, onUpdated }: MeetUpProps) => {
                             </span>
                         </div>
 
-                        <p className="text-size-base text-DarkOutline">
+                        <p className="text-size-small text-DarkOutline">
                             {room
                                 ? `${room.branch?.name} – Phòng ${room.room_number} · ${room.area}`
                                 : 'Phòng không xác định'}
