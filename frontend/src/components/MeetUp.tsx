@@ -163,7 +163,7 @@ const MeetUp = ({ appointment, onDeleted, onUpdated }: MeetUpProps) => {
                                 {timeStr} – {dateStr}
                             </h2>
                             <span className={`text-size-small border rounded-full px-2 py-0.5 ${colorClass}`}>
-                                {displayStatus}
+                                {statusLabel[displayStatus] || displayStatus}
                             </span>
                         </div>
 
@@ -179,7 +179,7 @@ const MeetUp = ({ appointment, onDeleted, onUpdated }: MeetUpProps) => {
                                 <button
                                     onClick={handleDelete}
                                     disabled={deleting}
-                                    className="w-fit rounded-md border-2 border-red-400 text-red-500 text-size-small whitespace-nowrap px-4 py-1 transition-colors hover:bg-red-500 hover:text-white hover:cursor-pointer disabled:opacity-50"
+                                    className="w-fit rounded-md border-2 border-DarkRed text-DarkRed text-size-small whitespace-nowrap px-4 py-1 transition-colors hover:bg-DarkRed hover:text-white hover:cursor-pointer disabled:opacity-50"
                                 >
                                     {deleting ? "Đang hủy..." : "Hủy lịch hẹn"}
                                 </button>

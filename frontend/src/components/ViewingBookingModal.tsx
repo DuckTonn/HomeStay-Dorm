@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import api from "@/lib/axios";
 import { useAuth } from "@/contexts/AuthContext";
 import loginIcon from "@/assets/icons/Login.svg";
+import { toast } from "react-toastify";
+
 interface ViewingBookingModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -45,6 +47,7 @@ export const ViewingBookingModal: React.FC<ViewingBookingModalProps> = ({
 
 
       if (response.data.success) {
+        toast.success("Đặt lịch xem phòng thành công!");
         setSuccess(true);
         setTimeout(() => {
           onClose();
@@ -52,7 +55,9 @@ export const ViewingBookingModal: React.FC<ViewingBookingModalProps> = ({
         }, 2000);
       }
     } catch (err: any) {
-      setError(err.response?.data?.message || "Đã có lỗi xảy ra. Vui lòng thử lại.");
+      const msg = err.response?.data?.message || "Đã có lỗi xảy ra. Vui lòng thử lại.";
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -97,23 +102,6 @@ export const ViewingBookingModal: React.FC<ViewingBookingModalProps> = ({
               </button>
             </div>
           </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Success View
-  if (success) {
-    return (
-      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
-        <div className="bg-[#FDFCF0] rounded-3xl shadow-2xl p-10 flex flex-col items-center gap-4 animate-in fade-in zoom-in duration-300">
-          <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center text-primary">
-            <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <h2 className="text-xl be-vietnam-pro-bold text-text">Đã gửi yêu cầu thành công!</h2>
-          <p className="text-text/70 be-vietnam-pro-light text-center">Chúng tôi sẽ liên hệ với bạn sớm nhất.</p>
         </div>
       </div>
     );

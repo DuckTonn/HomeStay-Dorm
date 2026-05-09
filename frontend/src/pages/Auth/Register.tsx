@@ -28,7 +28,9 @@ export const RegisterPage = () => {
         navigate("/login");
       }
     } catch (err: any) {
-      setErrorMsg(err.response?.data?.message || "Đăng ký thất bại");
+      const msg = err.response?.data?.message || "Đăng ký thất bại";
+      setErrorMsg(msg);
+      toast.error(msg);
     }
   };
 
