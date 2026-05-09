@@ -28,15 +28,6 @@ class ViewingAppointmentBUS {
         if (peopleCount > room.available_beds)
             throw createBusinessError(`Phòng chỉ còn ${room.available_beds} giường trống, không đủ cho ${peopleCount} người.`);
 
-        // Assign a sale employee (pick the first one for simplicity)
-        const { data: saleEmployees } = await this.db
-            .from('employee')
-            .select('employee_id')
-            .eq('role', 'sale')
-            .limit(1);
-        
-        const assignedEmployeeId = saleEmployees && saleEmployees.length > 0 ? saleEmployees[0].employee_id : null;
-
         // Create viewing appointment directly linked to the room
         const appointment = await viewingAppointmentDAO.create({
             appointment_time: appointment_time,
@@ -44,7 +35,7 @@ class ViewingAppointmentBUS {
             confirmation_status: 'Unconfirmed',
             room_id: room_id,
             tenant_id: tenant_id,
-            employee_id: assignedEmployeeId
+            employee_id: null
         });
 
         return appointment;
@@ -54,10 +45,11 @@ class ViewingAppointmentBUS {
         return viewingAppointmentDAO.findUpcoming(filters);
     }
 
-    async confirmAppointment(id) {
+    async confirmAppointment(id, employeeId) {
         return viewingAppointmentDAO.update(id, {
             status: 'Confirmed',
-            confirmation_status: 'Confirmed'
+            confirmation_status: 'Confirmed',
+            employee_id: employeeId  // gán nhân viên xác nhận
         });
     }
 

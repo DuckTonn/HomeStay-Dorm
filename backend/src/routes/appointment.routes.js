@@ -20,9 +20,10 @@ router.post('/', async (req, res, next) => {
         res.status(201).json({ success: true, data: result });
     } catch (error) { next(error); }
 });
-router.put('/:id/confirm', async (req, res, next) => {
+router.put('/:id/confirm', authenticate, async (req, res, next) => {
     try {
-        const result = await viewingAppointmentBUS.confirmAppointment(req.params.id);
+        const employeeId = req.user.employee_id;
+        const result = await viewingAppointmentBUS.confirmAppointment(req.params.id, employeeId);
         res.json({ success: true, data: result });
     } catch (error) { next(error); }
 });
