@@ -23,7 +23,7 @@ export const ViewingBookingModal: React.FC<ViewingBookingModalProps> = ({
   // Form states
   const [fullName, setFullName] = useState(user?.tenant?.name || "");
   const [beds, setBeds] = useState("1");
-  const [date, setDate] = useState("");
+  const [datetime, setDatetime] = useState("");
   const [phone, setPhone] = useState(user?.tenant?.phone || "");
 
   if (!isOpen) return null;
@@ -39,9 +39,8 @@ export const ViewingBookingModal: React.FC<ViewingBookingModalProps> = ({
       const response = await api.post("/appointment", {
         tenant_id: user?.tenant?.tenant_id,
         room_id: room.room_id,
-        expected_date: date,
         number_of_people: parseInt(beds, 10),
-        appointment_time: `${date}T09:00:00Z`, // Default to morning
+        appointment_time: new Date(datetime).toISOString(),
       });
 
 
@@ -160,12 +159,12 @@ export const ViewingBookingModal: React.FC<ViewingBookingModalProps> = ({
             </div>
 
             <div className="flex items-center gap-4 relative">
-              <label className="w-40 text-text be-vietnam-pro-medium">Ngày dự định</label>
+              <label className="w-40 text-text be-vietnam-pro-medium">Ngày &amp; Giờ hẹn</label>
               <input
-                type="date"
+                type="datetime-local"
                 required
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
+                value={datetime}
+                onChange={(e) => setDatetime(e.target.value)}
                 className="flex-1 bg-white border border-gray-300 rounded-xl px-4 py-2.5 outline-none focus:border-secondary text-text"
               />
             </div>

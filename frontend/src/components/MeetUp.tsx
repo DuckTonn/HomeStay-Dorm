@@ -16,7 +16,7 @@ export interface Appointment {
         branch: { name: string; address: string };
     } | null;
     tenant: { tenant_id: number; name: string; phone: string } | null;
-    sales_employee: { employee_id: number; name: string } | null;
+    employee: { employee_id: number; name: string } | null;
 }
 
 interface MeetUpProps {
@@ -27,18 +27,18 @@ interface MeetUpProps {
 
 // Keys phải khớp với giá trị lưu trong DB (tiếng Anh)
 const statusColor: Record<string, string> = {
-    'Confirmed':            'bg-green-100 text-green-700 border-green-300',
-    'Unconfirmed':          'bg-yellow-100 text-yellow-700 border-yellow-300',
+    'Confirmed': 'bg-green-100 text-green-700 border-green-300',
+    'Unconfirmed': 'bg-yellow-100 text-yellow-700 border-yellow-300',
     'Pending Confirmation': 'bg-yellow-100 text-yellow-700 border-yellow-300',
-    'Cancelled':            'bg-red-100 text-red-600 border-red-300',
+    'Cancelled': 'bg-red-100 text-red-600 border-red-300',
 };
 
 // Nhãn hiển thị tiếng Việt
 const statusLabel: Record<string, string> = {
-    'Confirmed':            'Đã xác nhận',
-    'Unconfirmed':          'Chưa xác nhận',
+    'Confirmed': 'Đã xác nhận',
+    'Unconfirmed': 'Chưa xác nhận',
     'Pending Confirmation': 'Chờ xác nhận',
-    'Cancelled':            'Đã hủy',
+    'Cancelled': 'Đã hủy',
 };
 
 

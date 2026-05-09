@@ -35,7 +35,7 @@ class ViewingAppointmentDAO extends BaseDAO {
                 *,
                 room:room_id (room_id, room_number, area, room_images, branch:branch_id (name, address)),
                 tenant:tenant_id (tenant_id, name, phone),
-                sales_employee:employee_id (employee_id, name)
+                employee:employee_id (employee_id, name)
             `, { count: 'exact' })
             .order('appointment_time', { ascending: true })
             .range(from, to);
