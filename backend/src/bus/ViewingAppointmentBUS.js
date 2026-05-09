@@ -9,11 +9,24 @@ class ViewingAppointmentBUS {
     }
 
     async createViewingAppointment(data) {
-        const { tenant_id, room_id, appointment_time } = data;
+        const { tenant_id, room_id, appointment_time, number_of_people } = data;
+
+        // ── Validate appointment_time ──────────────────────────────
+        if (!appointment_time) throw createBusinessError('Vui lòng chọn ngày và giờ hẹn.');
+        const apptDate = new Date(appointment_time);
+        if (isNaN(apptDate.getTime())) throw createBusinessError('Ngày giờ hẹn không hợp lệ.');
+        if (apptDate <= new Date()) throw createBusinessError('Thời gian hẹn phải là thời điểm trong tương lai.');
+
+        // ── Validate number_of_people ──────────────────────────────
+        const peopleCount = parseInt(number_of_people, 10);
+        if (!number_of_people || isNaN(peopleCount) || peopleCount < 1)
+            throw createBusinessError('Số giường phải là số nguyên lớn hơn 0.');
 
         // Get room details
         const room = await roomDAO.findById(room_id);
-        if (!room) throw createBusinessError('Room not found');
+        if (!room) throw createBusinessError('Room not found.');
+        if (peopleCount > room.available_beds)
+            throw createBusinessError(`Phòng chỉ còn ${room.available_beds} giường trống, không đủ cho ${peopleCount} người.`);
 
         // Assign a sale employee (pick the first one for simplicity)
         const { data: saleEmployees } = await this.db
