@@ -17,7 +17,7 @@ class ViewingAppointmentDAO extends BaseDAO {
         return super.delete(id, 'appointment_id');
     }
 
-    async findBySaleEmployee(employeeId) {
+    async findByEmployee(employeeId) {
         return this.findAll({ sales_employee_id: employeeId });
     }
 
