@@ -86,10 +86,9 @@ CREATE TABLE viewing_appointment (
     appointment_time TIMESTAMPTZ NOT NULL,
     status VARCHAR(50) DEFAULT 'Pending Confirmation',
     confirmation_status VARCHAR(50) DEFAULT 'Unconfirmed',
-    appointment_type VARCHAR(50) DEFAULT 'Viewing',
     room_id INT REFERENCES room(room_id),
     tenant_id INT REFERENCES tenant(tenant_id),
-    sales_employee_id INT REFERENCES employee(employee_id),
+    employee_id INT REFERENCES employee(employee_id),
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 

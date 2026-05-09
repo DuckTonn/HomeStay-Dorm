@@ -138,13 +138,13 @@ SELECT setval('tenant_tenant_id_seq', (SELECT MAX(tenant_id) FROM tenant));
 -- Schema mới: thêm tenant_id (FK), bỏ registration_request_id
 -- Ánh xạ: tenant_id lấy từ tenant đang đặt lịch (mock)
 -- ============================================================
-INSERT INTO viewing_appointment (appointment_time, status, confirmation_status, appointment_type, room_id, tenant_id, sales_employee_id) VALUES
-(NOW() + INTERVAL '1 day',   'Pending Confirmation', 'Unconfirmed', 'Viewing', 2,  2, 1),
-(NOW() + INTERVAL '2 days',  'Pending Confirmation', 'Unconfirmed', 'Viewing', 5,  4, 2),
-(NOW() + INTERVAL '3 days',  'Confirmed',            'Confirmed',   'Viewing', 7,  5, 5),
-(NOW() + INTERVAL '5 days',  'Pending Confirmation', 'Unconfirmed', 'Viewing', 8,  6, 5),
-(NOW() + INTERVAL '1 day',   'Pending Confirmation', 'Unconfirmed', 'Viewing', 10, 7, 2),
-(NOW() + INTERVAL '7 days',  'Confirmed',            'Confirmed',   'Viewing', 12, 8, 1);
+INSERT INTO viewing_appointment (appointment_time, status, confirmation_status, room_id, tenant_id, employee_id) VALUES
+(NOW() + INTERVAL '1 day',   'Pending Confirmation', 'Unconfirmed', 2,  2, 1),
+(NOW() + INTERVAL '2 days',  'Pending Confirmation', 'Unconfirmed', 5,  4, 2),
+(NOW() + INTERVAL '3 days',  'Confirmed',            'Confirmed',   7,  5, 5),
+(NOW() + INTERVAL '5 days',  'Pending Confirmation', 'Unconfirmed', 8,  6, 5),
+(NOW() + INTERVAL '1 day',   'Pending Confirmation', 'Unconfirmed', 10, 7, 2),
+(NOW() + INTERVAL '7 days',  'Confirmed',            'Confirmed',   12, 8, 1);
 
 -- ============================================================
 -- 8. Account

@@ -8,7 +8,6 @@ export interface Appointment {
     appointment_time: string;
     status: string;
     confirmation_status: string;
-    appointment_type: string;
     room: {
         room_id: number;
         room_number: number;

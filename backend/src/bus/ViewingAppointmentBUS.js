@@ -9,7 +9,7 @@ class ViewingAppointmentBUS {
     }
 
     async createViewingAppointment(data) {
-        const { tenant_id, room_id, appointment_time, appointment_type = 'Viewing' } = data;
+        const { tenant_id, room_id, appointment_time } = data;
 
         // Get room details
         const room = await roomDAO.findById(room_id);
@@ -22,17 +22,16 @@ class ViewingAppointmentBUS {
             .eq('role', 'sale')
             .limit(1);
         
-        const salesEmployeeId = saleEmployees && saleEmployees.length > 0 ? saleEmployees[0].employee_id : null;
+        const assignedEmployeeId = saleEmployees && saleEmployees.length > 0 ? saleEmployees[0].employee_id : null;
 
         // Create viewing appointment directly linked to the room
         const appointment = await viewingAppointmentDAO.create({
             appointment_time: appointment_time,
             status: 'Pending Confirmation',
             confirmation_status: 'Unconfirmed',
-            appointment_type: appointment_type,
             room_id: room_id,
             tenant_id: tenant_id,
-            sales_employee_id: salesEmployeeId
+            employee_id: assignedEmployeeId
         });
 
         return appointment;
