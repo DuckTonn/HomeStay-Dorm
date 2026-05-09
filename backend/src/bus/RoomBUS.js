@@ -1,6 +1,7 @@
 const roomDAO = require('../dao/RoomDAO');
 const bedDAO = require('../dao/BedDAO');
 const roomTypeDAO = require('../dao/RoomTypeDAO');
+const cloudinaryBUS = require('./CloudinaryBUS');
 
 class RoomBUS {
     async getAllRooms(filters = {}) {
@@ -108,26 +109,24 @@ class RoomBUS {
     }
 
     /**
-   * Append image URLs to a room's room_images array.
-   * @param {number} roomId
-   * @param {string[]} urls
-   * @returns {Promise<Object>} Updated room record
-   */
-    async addImages(roomId, urls) {
-        // Use PostgreSQL array concatenation (||) to add new URLs
-        const { data, error } = await this.db
-            .from('room')
-            .update({
-                room_images: this.db.raw('room_images || ?', [urls]),
-            })
-            .eq('room_id', roomId)
-            .select('*')
-            .single();
-        if (error) {
-            if (error.code === 'PGRST116') return null; // not found
-            throw error;
-        }
-        return data;
+     * Upload files to Cloudinary then append the returned URLs to room_images.
+     * @param {number} roomId
+     * @param {Array<Object>} files - Multer file objects (buffer)
+     * @returns {Promise<Object>} Updated room record
+     */
+    async addImages(roomId, files) {
+        // 1. Upload to Cloudinary → get URLs
+        const urls = await cloudinaryBUS.uploadMultiple(files);
+        if (!urls || urls.length === 0) return this.getRoomById(roomId);
+
+        // 2. Fetch current images then append
+        const room = await roomDAO.findById(roomId);
+        if (!room) throw Object.assign(new Error('Room not found'), { type: 'business' });
+        const currentImages = room.room_images || [];
+        const updatedImages = [...currentImages, ...urls];
+
+        // 3. Save back to DB
+        return roomDAO.update(roomId, { room_images: updatedImages });
     }
 
     async updateRoom(roomId, data) {

@@ -44,6 +44,15 @@ const UserMenu = () => {
                     >
                         Thông tin cá nhân
                     </button>
+                    {user?.role === 'customer' && (
+                        <Link
+                            to="/meet-up"
+                            className="block w-full text-center px-4 py-2 text-sm text-text hover:bg-LightOutline/50"
+                            onClick={() => setIsOpen(false)}
+                        >
+                            Lịch hẹn của tôi
+                        </Link>
+                    )}
                     {['admin', 'manager', 'sale', 'accountant', 'employee'].includes(user?.role || '') && (
                         <Link to="/dashboard" className="block w-full text-center px-4 py-2 text-sm text-text hover:bg-LightOutline/50" onClick={() => setIsOpen(false)}>
                             Quản lý (Dashboard)

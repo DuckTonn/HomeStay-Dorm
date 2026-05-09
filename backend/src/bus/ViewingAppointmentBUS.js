@@ -31,6 +31,7 @@ class ViewingAppointmentBUS {
             confirmation_status: 'Unconfirmed',
             appointment_type: appointment_type,
             room_id: room_id,
+            tenant_id: tenant_id,
             sales_employee_id: salesEmployeeId
         });
 
@@ -46,6 +47,18 @@ class ViewingAppointmentBUS {
             status: 'Confirmed',
             confirmation_status: 'Confirmed'
         });
+    }
+
+    async deleteAppointment(id) {
+        return viewingAppointmentDAO.delete(id);
+    }
+
+    async updateAppointment(id, data) {
+        const { appointment_time, room_id } = data;
+        const updates = {};
+        if (appointment_time) updates.appointment_time = appointment_time;
+        if (room_id) updates.room_id = room_id;
+        return viewingAppointmentDAO.update(id, updates);
     }
 }
 

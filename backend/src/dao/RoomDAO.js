@@ -57,8 +57,8 @@ class RoomDAO extends BaseDAO {
             || (effectiveMaxPrice !== undefined && effectiveMaxPrice !== null);
 
         const bedSelect = hasBedPriceFilter
-            ? 'bed!inner(*, contract_bed(contract(tenant(phone))))'
-            : 'bed(*, contract_bed(contract(tenant(phone))))';
+            ? 'bed!inner(*)'
+            : 'bed(*)';
 
 
         let query = this.db

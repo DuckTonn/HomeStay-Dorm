@@ -22,20 +22,27 @@ class ViewingAppointmentDAO extends BaseDAO {
     }
 
     async findUpcoming(filters = {}) {
-        const { page, limit } = filters;
+        const { page, limit, tenant_id } = filters;
         const pageNum = page ? Math.max(1, parseInt(page, 10)) : 1;
-        const limitNum = limit ? Math.max(1, parseInt(limit, 10)) : 10;
+        const limitNum = limit ? Math.max(1, parseInt(limit, 10)) : 50;
 
         const from = (pageNum - 1) * limitNum;
         const to = from + limitNum - 1;
 
-        const { data, count, error } = await this.db
+        let query = this.db
             .from(this.tableName)
-            .select('*', { count: 'exact' })
-            .eq('status', 'Pending Confirmation')
-            .gte('appointment_time', new Date().toISOString())
+            .select(`
+                *,
+                room:room_id (room_id, room_number, area, room_images, branch:branch_id (name, address)),
+                tenant:tenant_id (tenant_id, name, phone),
+                sales_employee:sales_employee_id (employee_id, name)
+            `, { count: 'exact' })
             .order('appointment_time', { ascending: true })
             .range(from, to);
+
+        if (tenant_id) query = query.eq('tenant_id', tenant_id);
+
+        const { data, count, error } = await query;
         if (error) throw error;
 
         return {

@@ -33,12 +33,24 @@ class AuthBUS {
             throw err;
         }
 
+        // Nếu là customer nhưng chưa có tenant → tự tạo và link
+        let tenantId = account.tenant_id || null;
+        if (account.role === 'customer' && !tenantId) {
+            const tenantDAO = require('../dao/TenantDAO');
+            const tenant = await tenantDAO.create({
+                name: account.username || account.email.split('@')[0],
+                nationality: 'Vietnam'
+            });
+            await accountDAO.update(account.account_id, { tenant_id: tenant.tenant_id });
+            tenantId = tenant.tenant_id;
+        }
+
         const payload = {
             account_id: account.account_id,
             username: account.username,
             role: account.role,
             employee_id: account.employee_id || null,
-            tenant_id: account.tenant_id || null
+            tenant_id: tenantId
         };
 
         const token = jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
