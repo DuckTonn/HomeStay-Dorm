@@ -9,7 +9,7 @@ const { RoomDTO } = require('../dto');
 // Room types (static routes first)
 router.get('/room-type/all', async (req, res, next) => {
     try {
-        const result = await roomBUS.getAllRoomTypes(req.query);
+        const result = await roomBUS.getAllRoomTypes({ ...req.query, limit: 100 });
         res.json({ success: true, ...result });
     } catch (error) { next(error); }
 });
