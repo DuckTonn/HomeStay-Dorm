@@ -4,7 +4,7 @@ const { validationResult } = require('express-validator');
 const validate = (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        const error = new Error('Invalid data');
+        const error = new Error('Dữ liệu không hợp lệ');
         error.type = 'validation';
         error.errors = errors.array().map(err => ({
             field: err.path,

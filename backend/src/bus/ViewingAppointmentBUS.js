@@ -24,7 +24,7 @@ class ViewingAppointmentBUS {
 
         // Get room details
         const room = await roomDAO.findById(room_id);
-        if (!room) throw createBusinessError('Room not found.');
+        if (!room) throw createBusinessError('Không tìm thấy thông tin phòng, vui lòng kiểm tra lại.');
         if (peopleCount > room.available_beds)
             throw createBusinessError(`Phòng chỉ còn ${room.available_beds} giường trống, không đủ cho ${peopleCount} người.`);
 
