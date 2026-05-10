@@ -57,7 +57,7 @@ export const RegisterPage = () => {
           <input
             type="email"
             placeholder="Email"
-            {...register("email", { 
+            {...register("email", {
               required: "Vui lòng nhập email",
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
