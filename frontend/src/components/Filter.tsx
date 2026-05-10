@@ -32,6 +32,7 @@ const Filter = ({ pos }: { pos: string }) => {
         ]);
         if (branchRes.data?.success) setBranches(branchRes.data.data);
         if (typeRes.data?.success) setRoomTypes(typeRes.data.data);
+        console.log(typeRes.data.data, branchRes.data.data);
       } catch (e) {
         console.error('Failed to load meta', e);
       }
